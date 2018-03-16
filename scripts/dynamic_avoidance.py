@@ -7,6 +7,8 @@ import smach_ros
 
 from std_msgs.msg import String
 from obstacle_detector.msg import Obstacles
+from obstacle_detector.msg import SegmentObstacle 
+from geometry_msgs.msg import Point
 
 class Sequence(smach.State):
     def __init__(self):
@@ -24,14 +26,29 @@ class DynamicAvoidance:
         self.pub = rospy.Publisher('write', String, queue_size=10)
         self.sub = rospy.Subscriber('raw_obstacles', Obstacles, self.obstacles_cb)
 
+    def calc_distance(self, point):
+        distance = (point.x)**2 + (point.y)**2
+        return distance
+
     def obstacles_cb(self, data):
         self.obstacles_data = data
-        print(obstacles_data)
+        self.nearest_obstacle = self.obstacles_data.segments[0]
+        self.nearest_center_point = Point(100, 0, 0)
+        for obstacle in self.obstacles_data.segments:
+            self.center_point = Point() 
+            self.center_point.x = (obstacle.first_point.x + obstacle.last_point.x)/2 
+            self.center_point.y = (obstacle.first_point.y + obstacle.last_point.y)/2 
+            if self.calc_distance(self.nearest_center_point) > self.calc_distance(self.center_point) and self.center_point.x > 0:
+                self.nearest_center_point = self.center_point
+                self.nearest_obstacle = obstacle
+        print(self.nearest_center_point)
+        print(self.nearest_obstacle)
+        print('-------------------')
 
     def execute(self):
         rospy.init_node('dynamic_avoidance', anonymous=True)
         rate = rospy.Rate(100)
-        while true:
+        while True:
             rate.sleep()
 
 if __name__ == '__main__':
