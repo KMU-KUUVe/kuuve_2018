@@ -10,16 +10,20 @@
 #include <stdlib.h>
 #include <math.h>
 #include <vector>
+#include <string>
 
 using namespace std;
 
 ros::Publisher pub;
 
-double distance_from_car(geometry_msgs::Point p1, geometry_msgs::Point p2){
+#define CONST_STEER = 1500;
+#define CONST_SPEED = 1530;
+
+/*double distance_from_car(geometry_msgs::Point p1, geometry_msgs::Point p2){
   double gradient = (p1.x - p2.x) / (p1.y - p2.y);
   double distance = abs(-gradient * p1.y + p1.x) / sqrt(1 + gradient * gradient);
   return distance;
-}
+}*/
 
 bool cmp(obstacle_detector::CircleObstacle a, obstacle_detector::CircleObstacle b){
 		return a.center.x < b.center.x;
@@ -54,7 +58,7 @@ void obstacle_cb(const obstacle_detector::Obstacles data) {
 	}
 	
 	if(right_circles.size() > 0) //check vector is empty.
-		sort(right_circles.begin(), right_circles.end(), cmp);
+	  sort(right_circles.begin(), right_circles.end(), cmp);
 	if(left_circles.size() > 0) //check vector is empty.
 	  sort(left_circles.begin(), right_circles.end(), cmp);
 
@@ -63,17 +67,29 @@ void obstacle_cb(const obstacle_detector::Obstacles data) {
 	for(int i = 0; i < right_circles.size(); i++){
 	  cout << right_circles[i].center << endl;
 	}
-  
- // pub.publish(msg);
+	for(int i = 0; i < left_circles.size(); i++){
+	  cout << left_circles[i].center << endl;
+	}
+
+	cout << 4 << endl;
+
+	mean_point_x = right_circles[0].center.y + right_circles[1].center.y + left_circles[0].center.y + left_circles[1].center.y; 
+	//mean_point_y = right_circles[0].center.x + right_circles[1].center.x + left_circles[0].center.x + left_circles[1].center.x; 
+	
+	steer = CONST_STEER + (mean_point_x * 200);
+	speed = CONST_SPEED;
+ 
+	msg.data = std::to_string(steer) + "," + std::to_string(speed) + ",";	 
+ 	pub.publish(msg);
 }
 
 int main(int argc, char* argv[]) {
-	ros::init(argc, argv, "PID_Controller_node");
+	ros::init(argc, argv, "narrow_path_node");
 	ros::NodeHandle nh;
 
 	ros::Subscriber sub = nh.subscribe("raw_obstacles", 1, obstacle_cb);
 
-	pub = nh.advertise<std_msgs::String> ("write", 10);
+	pub = nh.advertise<std_msgs::String> ("write", 1000);
 	ros::spin();
 }
 
