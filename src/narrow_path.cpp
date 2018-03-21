@@ -65,11 +65,32 @@ void obstacle_cb(const obstacle_detector::Obstacles data) {
 		int steer = 1500; 
 		int speed = 1500;
 
-		if(left_circles.size() >= 2 && right_circles.size() >= 2){
-				double mean_point_y = right_circles[0].center.y + right_circles[1].center.y + left_circles[0].center.y + left_circles[1].center.y; 
+		/*
+			 if(left_circles.size() >= 2 && right_circles.size() >= 2){
+				double mean_point_right_y = (right_circles[0].center.y + right_circles[1].center.y) / 2 
+				double mean_point_left_y = (left_circles[0].center.y + left_circles[1].center.y) / 2 
+				double mean_point_y = mean_point_right_y + mean_point_left_y;
 				//		double mean_point_y = right_circles[0].center.x + right_circles[1].center.x + left_circles[0].center.x + left_circles[1].center.x; 
+		*/
+		if(left_circles.size() >= 1 && right_circles.size() >= 1){
+				double mean_point_right_y = 0;
+				double mean_point_left_y = 0;
 
-				steer = int(mean_point_y * -400.0) + CONST_STEER;
+				if(right_circles.size() >=2){
+						mean_point_right_y = (right_circles[0].center.y + right_circles[1].center.y) / 2; 
+				}
+				else {
+						mean_point_right_y = right_circles[0].center.y; 
+				}
+				if(left_circles.size() >=2){
+						mean_point_left_y = (left_circles[0].center.y + left_circles[1].center.y) / 2; 
+				}
+				else{ 
+						mean_point_left_y = left_circles[0].center.y; 
+				}
+				double mean_point_y = mean_point_right_y + mean_point_left_y;
+	
+				steer = int(mean_point_y * -700.0) + CONST_STEER;
 				speed = CONST_SPEED;
 				cout << mean_point_y << " " << steer << " " << speed << endl;
 		}
