@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <node pkg="dynamic_avoidance" name="dynamic_avoidance_action" type="dynamic_avoidance_action.py" output="screen"/>
+
+  <node pkg="serial_example" name="serial_read_and_write_node" type="serial_read_and_write_node" />
+
+	<node pkg="action_with_smach" name="state_machine_simple" type="state_machine_simple.py" />
+
+	<node pkg="keyboard" name="keyboard" type="keyboard"/>
+
+	<node pkg="smach_viewer" name="smach_viewer" type="smach_viewer.py" output="screen"/>
+<!--
+  <node pkg="urg_node" name="urg_node" type="urg_node" output="screen">
+    <param name="ip_address" value="192.168.0.11"/>
+  </node>
+-->
+  <include file="$(find obstacle_detector)/launch/obstacle_urg_node_t.launch" clear_params="false"/>
+
+</launch>
