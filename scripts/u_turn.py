@@ -4,16 +4,23 @@ import roslib; roslib.load_manifest('smach_ros')
 import rospy
 import smach
 import smach_ros
-import actionlib 
 
 from std_msgs.msg import String
 from obstacle_detector.msg import Obstacles
 from obstacle_detector.msg import SegmentObstacle 
 from geometry_msgs.msg import Point
 
-from action_with_smach.msg import MissionPlannerAction, MissionPlannerGoal, MissionPlannerResult, MissionPlannerFeedback
-from dynamic_avoidance import DynamicAvoidance
-'''
+
+class Sequence(smach.State):
+    def __init__(self):
+        smach.State.__init__(self, outcomes=['outcome1'])
+        self.counter = 0
+
+    def execute(self, userdata):
+        rospy.loginfo('Executing state FOO')
+        rospy.sleep(3000)
+        return 'outcome1'
+
 class DynamicAvoidance:
     def __init__(self):
         self.obstacles_date = Obstacles()
@@ -39,41 +46,36 @@ class DynamicAvoidance:
             if self.calc_distance(self.nearest_center_point) > self.calc_distance(self.center_point) and self.center_point.x > 0 and self.center_point.y > -0.3 and self.center_point.y < 0.3:
                 self.nearest_center_point = self.center_point
                 self.nearest_obstacle = obstacle
-        debug = 0
-        if debug:
-            print(self.nearest_center_point)
-            print(self.nearest_obstacle)
-            print('-------------------')
-
-    def execute(self):
-        rospy.loginfo("Mission Start!")
-        rate = rospy.Rate(100)
-        while self.nearest_center_point.x > 0.4:
-            self.pub.publish("1500,1520,")
-        rospy.loginfo("too close")
-        while self.nearest_center_point.x < 0.5:
-            self.pub.publish("1500,1500,")
-        rospy.loginfo("obstacle dissapear")
-        self.pub.publish("1500,1528,")
-        rospy.sleep(2)
-        self.pub.publish("1500,1500,")
+                '''
+        print(self.nearest_center_point)
+        print(self.nearest_obstacle)
+        print('-------------------')
 '''
 
-def execute_cb(goal):
-    rospy.loginfo("Goal Received")
-    dynamic_mission = DynamicAvoidance()
-    result = MissionPlannerResult()
-    result.time_elapsed = rospy.Duration(1)
-    dynamic_mission.execute()
-    action_server.set_succeeded(result)
-		
+    def execute(self):
+        rospy.init_node('dynamic_avoidance', anonymous=True)
+        rate = rospy.Rate(100)
+        while self.nearest_center_point.x > 1.3:
+            self.pub.publish("1500,1520,")
+            rate.sleep()
+        print("too close")
+
+        print("turn start")
+        self.pub.publish("1100,1530,")
+        rospy.sleep(5)
+
+        print("right turn")
+        self.pub.publish("1900,1520,")
+        rospy.sleep(0)
+
+        print("too close")
+        self.pub.publish("1500,1500,")
+        rospy.sleep(0.1)
+
 if __name__ == '__main__':
-    rospy.init_node('dynamic_avoidance', anonymous=True)
     try:
-        action_name = 'Mission1'
-        action_server = actionlib.SimpleActionServer(action_name, MissionPlannerAction, execute_cb=execute_cb, auto_start=False)
-        action_server.start()
-        rospy.spin()
+        dynamic_mission = DynamicAvoidance()
+        dynamic_mission.execute()
     except rospy.ROSInterruptException:
         print(error)
         pass
