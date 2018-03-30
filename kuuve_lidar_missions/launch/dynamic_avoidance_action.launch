@@ -3,6 +3,7 @@
 <launch>
 
   <node pkg="dynamic_avoidance" name="dynamic_avoidance_action" type="dynamic_avoidance_action.py" output="screen"/>
+  <node pkg="dynamic_avoidance" name="u_turn_action" type="u_turn_action.py" output="screen"/>
 
   <node pkg="serial_example" name="serial_read_and_write_node" type="serial_read_and_write_node" />
 
