@@ -1,0 +1,20 @@
+<?xml version="2.0"?>
+<package format="2">
+  <name>kuuve_2018</name>
+  <version>0.0.0</version>
+  <description>The kuuve_2018 package</description>
+
+  <maintainer email="hdh7485@todo.todo">hdh7485</maintainer>
+  <license>BSD</license>
+
+  <author email="hdh7485@gmail.com">Donghee Han</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>kuuve_lidar_mission</exec_depend>
+  <exec_depend>kuuve_mission_planner</exec_depend>
+  <exec_depend>usb_webcam</exec_depend>
+
+  <export>
+    <metapackage />
+  </export>
+</package>
