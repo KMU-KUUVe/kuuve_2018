@@ -1,25 +1,36 @@
-#include "static_avoidance.h"
+#include <ros/ros.h>
+#include <iostream>
+#include <string>
 
-namespace static_avoidance{
+#include <obstacle_detector/Obstacles.h>
+#include <geometry_msgs/Point.h>
+// #include <ackermann_msgs/AckermannDriveStamped.h>
+#include <algorithm>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <vector>
+#include <std_msgs/String.h>
+// #include <std_msgs/Empty.h>
 
-StaticAvoidance::StaticAvoidance():nh_(){
-	initSetup();
-}
+#define DETECT_DISTANCE 0.9
+#define CONSTANT_STEER 1500
+#define CONSTANT_VEL 1520
+#define OBSTACLE_RADIUS 0.2
+using namespace std;
 
-StaticAvoidance::StaticAvoidance(ros::NodeHandle nh):nh_(nh){
-	initSetup();
-}
+ros::Publisher pub;
 
-StaticAvoidance::void initSetup(){
-	turn_left_flag = false;
-	turn_right_flag = false;
-	return_left_flag = false;
-	return_right_flag = false;
-	end_flag = false;
-	sequence = 0;
-}
+bool turn_left_flag = false;
+bool turn_right_flag = false;
+bool return_left_flag = false;
+bool return_right_flag = false;
+bool end_flag = false;
+int sequence = 0;
 
-void StaticAvoidance::obstacle_cb(const obstacle_detector::Obstacles data) {
+vector<int> steer_buffer;
+
+void calculator(const obstacle_detector::Obstacles data) {
   geometry_msgs::Point c, mycar;
   bool flag = false;
   int speed = CONSTANT_VEL;
@@ -123,4 +134,11 @@ void StaticAvoidance::obstacle_cb(const obstacle_detector::Obstacles data) {
    pub.publish(msg);
 }
 
-} //end namespace
+int main(int argc, char* argv[]) {
+  ros::init(argc, argv, "Static_avoidance_node");
+  ros::NodeHandle nh;
+
+  ros::Subscriber sub = nh.subscribe("raw_obstacles", 1, calculator);
+  pub = nh.advertise<std_msgs::String>("write", 1000);
+  ros::spin();
+}
