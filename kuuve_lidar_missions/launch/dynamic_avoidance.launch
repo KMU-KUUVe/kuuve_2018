@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <node pkg="dynamic_avoidance" name="dynamic_avoidance" type="dynamic_avoidance.py" output="screen"/>
+  <node pkg="kuuve_lidar_missions" name="dynamic_avoidance" type="dynamic_avoidance.py" output="screen"/>
 
   <node pkg="serial_example" name="serial_read_and_write_node" type="serial_read_and_write_node" />
 
@@ -9,6 +9,6 @@
     <param name="ip_address" value="192.168.0.11"/>
   </node>
 -->
-  <include file="$(find obstacle_detector)/launch/obstacle_urg_node_t.launch" clear_params="false"/>
+  <include file="$(find kuuve_lidar_missions)/launch/obstacle_detector.launch" clear_params="false"/>
 
 </launch>
