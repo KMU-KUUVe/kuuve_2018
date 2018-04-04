@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>static_avoidance</name>
+  <name>kuuve_lidar_missions</name>
   <version>0.0.0</version>
   <description>The static_avoidance package</description>
 

@@ -11,17 +11,7 @@ from obstacle_detector.msg import SegmentObstacle
 from geometry_msgs.msg import Point
 
 
-class Sequence(smach.State):
-    def __init__(self):
-        smach.State.__init__(self, outcomes=['outcome1'])
-        self.counter = 0
-
-    def execute(self, userdata):
-        rospy.loginfo('Executing state FOO')
-        rospy.sleep(3000)
-        return 'outcome1'
-
-class DynamicAvoidance:
+class Uturn:
     def __init__(self):
         self.obstacles_date = Obstacles()
         self.pub = rospy.Publisher('write', String, queue_size=10)
@@ -74,8 +64,8 @@ class DynamicAvoidance:
 
 if __name__ == '__main__':
     try:
-        dynamic_mission = DynamicAvoidance()
-        dynamic_mission.execute()
+        u_turn = Uturn()
+        u_turn.execute()
     except rospy.ROSInterruptException:
         print(error)
         pass
