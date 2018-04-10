@@ -17,11 +17,12 @@ find_package(catkin REQUIRED
 )
 
 ## Generate messages in the 'msg' folder
-#add_message_files(
+##add_message_files(
 #   FILES
 #   Message1.msg
-#   Message2.msg
-# )
+#   Message2.m
+#	AckermannDriveStamped.msg
+#)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -39,8 +40,9 @@ find_package(catkin REQUIRED
 
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
-   DEPENDENCIES
-   std_msgs  # Or other packages containing msgs
+  DEPENDENCIES
+  std_msgs  # Or other packages containing msgs
+  ackermann_msgs
 )
 
 ## DEPENDS: system dependencies of this project that dependent projects also need
@@ -58,17 +60,19 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
+  include
   ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME} src/static_avoidance_tt.cpp) 
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
-add_executable(u_turn src/u_turn.cpp)
-target_link_libraries(u_turn ${catkin_LIBRARIES})
+#add_executable(${PROJECT_NAME} src/static_avoidance_tt.cpp) 
+#target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
+
+#add_executable(u_turn src/u_turn.cpp)
+#target_link_libraries(u_turn ${catkin_LIBRARIES})
 
 
 ## Add cmake target dependencies of the executable
