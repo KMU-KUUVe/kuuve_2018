@@ -12,7 +12,7 @@ find_package(Boost REQUIRED)
 
 add_message_files(
 	DIRECTORY msg
-	FILES AckermannDriveStamped.msg	AckermannDrive.msg
+	# FILES AckermannDriveStamped.msg	AckermannDrive.msg
 )
 
 generate_messages(DEPENDENCIES std_msgs)

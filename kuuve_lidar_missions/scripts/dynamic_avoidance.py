@@ -9,22 +9,13 @@ from std_msgs.msg import String
 from obstacle_detector.msg import Obstacles
 from obstacle_detector.msg import SegmentObstacle 
 from geometry_msgs.msg import Point
+from ackermann_msgs.msg import AckermannDriveStamped
 
-
-class Sequence(smach.State):
-    def __init__(self):
-        smach.State.__init__(self, outcomes=['outcome1'])
-        self.counter = 0
-
-    def execute(self, userdata):
-        rospy.loginfo('Executing state FOO')
-        rospy.sleep(3000)
-        return 'outcome1'
 
 class DynamicAvoidance:
     def __init__(self):
         self.obstacles_date = Obstacles()
-        self.pub = rospy.Publisher('write', String, queue_size=10)
+        self.pub = rospy.Publisher('ackermann', AckermannDriveStamped, queue_size=10)
         self.sub = rospy.Subscriber('raw_obstacles', Obstacles, self.obstacles_cb)
 #        self.nearest_obstacle = self.obstacles_data.segments[0]
         self.nearest_obstacle = SegmentObstacle()
@@ -55,17 +46,30 @@ class DynamicAvoidance:
     def execute(self):
         rospy.init_node('dynamic_avoidance', anonymous=True)
         rate = rospy.Rate(100)
-        while self.nearest_center_point.x > 0.4:
-            self.pub.publish("1500,1520,")
-            rate.sleep()
+        acker_data = AckermannDriveStamped()
+        while self.nearest_center_point.x > 3.0:
+            acker_data.drive.steering_angle = 0
+            acker_data.drive.speed = 7
+            self.pub.publish(acker_data)
+
         print("too close")
-        while self.nearest_center_point.x < 0.5:
-            self.pub.publish("1500,1500,")
+
+        while self.nearest_center_point.x < 4.0:
+            acker_data.drive.steering_angle = 0
+            acker_data.drive.speed = 0
+            self.pub.publish(acker_data)
+
             rate.sleep()
+
         print("obstacle dissapear")
-        self.pub.publish("1500,1528,")
-        rospy.sleep(2)
-        self.pub.publish("1500,1500,")
+        acker_data.drive.steering_angle = 0
+        acker_data.drive.speed = 7
+        self.pub.publish(acker_data)
+        rospy.sleep(4)
+
+        acker_data.drive.steering_angle = 0
+        acker_data.drive.speed = 0
+        self.pub.publish(acker_data)
 
 if __name__ == '__main__':
     try:
