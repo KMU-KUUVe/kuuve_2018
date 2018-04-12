@@ -6,14 +6,15 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   serial
   std_msgs
+  ackermann_msgs
   message_generation
 )
 find_package(Boost REQUIRED)
 
-add_message_files(
-	DIRECTORY msg
+#add_message_files(
+	#	DIRECTORY msg
 	# FILES AckermannDriveStamped.msg	AckermannDrive.msg
-)
+	#)
 
 generate_messages(DEPENDENCIES std_msgs)
 
@@ -21,7 +22,8 @@ catkin_package(
   CATKIN_DEPENDS
     serial
     std_msgs
-	message_runtime
+    message_runtime
+    ackermann_msgs
   DEPENDS 
     Boost
 )

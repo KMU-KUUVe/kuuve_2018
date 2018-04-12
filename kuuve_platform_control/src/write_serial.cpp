@@ -20,7 +20,7 @@ unsigned char speed_0 = 0x00;
 unsigned char speed_1 = 0x00;
 unsigned char steer_0 = 0x00;
 unsigned char steer_1 = 0x00;
-unsigned char front_break = 0x01;
+unsigned char front_brake = 0x01;
 
 void ackermannCallback(const ackermann_msgs::AckermannDriveStamped::ConstPtr& msg){
 	unsigned int steer_total = 0;
@@ -31,24 +31,24 @@ void ackermannCallback(const ackermann_msgs::AckermannDriveStamped::ConstPtr& ms
 		gear = 0x00;
 		speed_1 = speed_total;
 		speed_0 = 0x00;
-		front_break = 0;
+		front_brake = 0;
 	}
 	else if(msg->drive.speed > -255 && msg->drive.speed < 0){
 		gear = 0x02;
 		speed_1 = -speed_total;
 		speed_0 = 0x00;
-		front_break = 0;
+		front_brake = 0;
 	}
 	else if(msg->drive.speed == 0){
 		speed_0 = 0x00;
 		speed_1 = 0x00;
-		front_break = 200;
+		front_brake = 200;
 	}
 	else{
 		gear = 0x01;
 		speed_0 = 0x00;
 		speed_1 = 0x00;
-		front_break = 200;
+		front_brake = 200;
 	}
 	if(steer_total > 28)
 		steer_total = 28;
@@ -71,7 +71,7 @@ int main (int argc, char** argv){
 	string serial_input;
 
 	unsigned int steer_total = 0;
-	unsigned char str[14] = {0x53,0x54,0x58,0x01,0x00,0x00,speed_0, speed_1 ,steer_0,steer_1,front_break,alive,0x0D,0x0A};
+	unsigned char str[14] = {0x53,0x54,0x58,0x01,0x00,0x00,speed_0, speed_1 ,steer_0,steer_1,front_brake,alive,0x0D,0x0A};
 
 	ros::init(argc, argv, "serial_example_node");
 	ros::NodeHandle nh;
@@ -107,7 +107,7 @@ int main (int argc, char** argv){
 		str[7] = speed_1;
 		str[8] = steer_0;
 		str[9] = steer_1;
-		str[10] = front_break;
+		str[10] = front_brake;
 		str[11] = alive;
 
 		//send packet
