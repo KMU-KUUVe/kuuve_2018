@@ -59,6 +59,10 @@ void ackermannCallback(const ackermann_msgs::AckermannDriveStamped::ConstPtr& ms
 //speed_0 = 0x00, speed_1 = 0x10 > 1.6km/h
 	steer_0 = steer_total >> 8;
 	steer_1 = steer_total & 0xff;
+
+	ROS_INFO("Steer_0: %d", steer_0);
+	ROS_INFO("Steer_1: %d", steer_1);
+	
 //	steer_0 = ~steer_0;
 //	steer_1 = ~steer_1;
 }
