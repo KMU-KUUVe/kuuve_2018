@@ -23,8 +23,10 @@ unsigned char steer_1 = 0x00;
 unsigned char front_brake = 0x01;
 
 void ackermannCallback(const ackermann_msgs::AckermannDriveStamped::ConstPtr& msg){
-	unsigned int steer_total = 0;
-	unsigned int speed_total = 0;
+	//unsigned int steer_total = 0;
+	//unsigned int speed_total = 0;
+	int steer_total = 0;
+	int speed_total = 0;
 	speed_total = msg->drive.speed*10;
 	cout << "steer: " << msg->drive.steering_angle << " speed: " << msg->drive.speed << endl;
 	if(msg->drive.speed < 255 && msg->drive.speed > 0){
