@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- Reusable launch file for obstacle detection -->
 <launch>
-  <include file="$(find lms1xx)/launch/LMS1xx.launch" />
+	<node pkg="rosbag" type="play" name="rosbag" args="-l /home/nvidia/catkin_ws/src/kuuve_2018/rosbag/narrow_drive/narrow_drive3_2018-04-18-16-05-29.bag" />
 
   <node name="obstacle_extractor" pkg="obstacle_detector" type="obstacle_extractor_node">
     <param name="active"               value="true"/>

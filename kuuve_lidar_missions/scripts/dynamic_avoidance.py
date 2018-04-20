@@ -37,11 +37,9 @@ class DynamicAvoidance:
             if self.calc_distance(self.nearest_center_point) > self.calc_distance(self.center_point) and self.center_point.x > 0 and self.center_point.y > -0.3 and self.center_point.y < 0.3:
                 self.nearest_center_point = self.center_point
                 self.nearest_obstacle = obstacle
-                '''
-        print(self.nearest_center_point)
+#        print(self.nearest_center_point)
         print(self.nearest_obstacle)
         print('-------------------')
-'''
 
     def execute(self):
         rospy.init_node('dynamic_avoidance', anonymous=True)
@@ -59,8 +57,6 @@ class DynamicAvoidance:
             acker_data.drive.speed = 0
             self.pub.publish(acker_data)
 
-            rate.sleep()
-
         print("obstacle dissapear")
         acker_data.drive.steering_angle = 0
         acker_data.drive.speed = 7
@@ -70,6 +66,7 @@ class DynamicAvoidance:
         acker_data.drive.steering_angle = 0
         acker_data.drive.speed = 0
         self.pub.publish(acker_data)
+        print("finish")
 
 if __name__ == '__main__':
     try:
