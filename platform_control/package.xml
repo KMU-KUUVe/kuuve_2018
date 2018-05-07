@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>kuuve_platform_control</name>
+  <name>platform_control</name>
   <version>0.0.1</version>
   <description>Control kuuve package</description>
 
