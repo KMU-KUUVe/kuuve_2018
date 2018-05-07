@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>kuuve_lidar_missions</name>
+  <name>dynamic_avoidance</name>
   <version>0.0.0</version>
   <description>The static_avoidance package</description>
   <maintainer email="hdh7485@gmail.com">donghee Han</maintainer>
