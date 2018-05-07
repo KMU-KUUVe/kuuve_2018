@@ -23,8 +23,10 @@ unsigned char steer_1 = 0x00;
 unsigned char front_brake = 0x01;
 
 void ackermannCallback(const ackermann_msgs::AckermannDriveStamped::ConstPtr& msg){
-	unsigned int steer_total = 0;
-	unsigned int speed_total = 0;
+	//unsigned int steer_total = 0;
+	//unsigned int speed_total = 0;
+	int steer_total = 0;
+	int speed_total = 0;
 	speed_total = msg->drive.speed*10;
 	cout << "steer: " << msg->drive.steering_angle << " speed: " << msg->drive.speed << endl;
 	if(msg->drive.speed < 255 && msg->drive.speed > 0){
@@ -59,6 +61,10 @@ void ackermannCallback(const ackermann_msgs::AckermannDriveStamped::ConstPtr& ms
 //speed_0 = 0x00, speed_1 = 0x10 > 1.6km/h
 	steer_0 = steer_total >> 8;
 	steer_1 = steer_total & 0xff;
+
+	ROS_INFO("Steer_0: %d", steer_0);
+	ROS_INFO("Steer_1: %d", steer_1);
+	
 //	steer_0 = ~steer_0;
 //	steer_1 = ~steer_1;
 }

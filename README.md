@@ -1,4 +1,4 @@
-# KUUVe 2018 Meatapackage
+# KUUVe 2018 Metapackage
 ## Dependency packages
 - obstacle_tector
 - urg_node or LMS1xx
