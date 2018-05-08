@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(kuuve_mission_planner)
+project(mission_planner)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
