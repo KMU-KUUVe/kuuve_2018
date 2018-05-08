@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(kuuve_lidar_missions)
+project(dynamic_avoidance)
 
 ## Add support for C++11, supported in ROS Kinetic and newer
 add_definitions(-std=c++11)
@@ -14,6 +14,7 @@ find_package(catkin REQUIRED
   sensor_msgs
   geometry_msgs
   obstacle_detector
+  ackermann_msgs
 )
 
 ## Generate messages in the 'msg' folder
@@ -49,7 +50,7 @@ generate_messages(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES static_avoidance
-  CATKIN_DEPENDS roscpp sensor_msgs geometry_msgs
+  CATKIN_DEPENDS roscpp sensor_msgs geometry_msgs ackermann_msgs
   DEPENDS system_lib
 )
 
@@ -77,7 +78,7 @@ include_directories(
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+#add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
