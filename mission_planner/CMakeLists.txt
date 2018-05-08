@@ -11,7 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   sensor_msgs
   actionlib
-	actionlib_msgs
+  actionlib_msgs
   smach_ros
 )
 
@@ -63,14 +63,14 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## Generate actions in the 'action' folder
 add_action_files(
-	DIRECTORY action
+  DIRECTORY action
   FILES MissionPlanner.action
 )
 
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
-	actionlib_msgs
+  actionlib_msgs
   std_msgs  # Or other packages containing msgs
 )
 
