@@ -66,7 +66,7 @@
   <build_export_depend>smach_ros</build_export_depend>
   <exec_depend>smach_ros</exec_depend>
 
-	<exec_depend>message_generation</exec_depend>
+  <exec_depend>message_generation</exec_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
