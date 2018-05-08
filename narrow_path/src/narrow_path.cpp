@@ -4,11 +4,11 @@ using namespace std;
 
 namespace narrow_path{
 
-NarrowPath::NarrowPath(std::string name):as_(nh_, name, false), nh_("~"){
+NarrowPath::NarrowPath(std::string name):as_(nh_, name, boost::bind(&NarrowPath::goal_cb, this, _1), false), nh_("~"){
 	initSetup();
 }
 
-NarrowPath::NarrowPath(std::string name, ros::NodeHandle nh):as_(nh_, name, false), nh_(nh){
+NarrowPath::NarrowPath(std::string name, ros::NodeHandle nh):as_(nh_, name, boost::bind(&NarrowPath::goal_cb, this, _1), false), nh_(nh){
 	initSetup();
 }
 
@@ -82,10 +82,8 @@ void NarrowPath::obstacle_cb(const obstacle_detector::Obstacles data){
 #endif
 }
 
-void calculate_points(){
-}
-
-void publish(){
+void NarrowPath::goal_cb(const mission_planner::MissionPlannerGoalConstPtr &goal){
+	this->run();
 }
 
 void NarrowPath::run(){

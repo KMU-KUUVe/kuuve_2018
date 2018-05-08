@@ -26,9 +26,8 @@ class NarrowPath{
 		NarrowPath(std::string name, ros::NodeHandle nh);
 		void initSetup();
 		void obstacle_cb(const obstacle_detector::Obstacles data);
+		void goal_cb(const mission_planner::MissionPlannerGoalConstPtr &goal);
 		void run();
-		void calculate_points();
-		void publish();
 	
 		static bool cmp(const obstacle_detector::CircleObstacle a, const obstacle_detector::CircleObstacle b){
 			return (a.center.x < b.center.x);
