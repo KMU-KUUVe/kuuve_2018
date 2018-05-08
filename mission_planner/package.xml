@@ -54,6 +54,10 @@
   <build_export_depend>actionlib</build_export_depend>
   <exec_depend>actionlib</exec_depend>
 
+  <build_depend>actionlib_msgs</build_depend>
+  <build_export_depend>actionlib_msgs</build_export_depend>
+  <exec_depend>actionlib_msgs</exec_depend>
+
   <build_depend>keyboard</build_depend>
   <build_export_depend>keyboard</build_export_depend>
   <exec_depend>keyboard</exec_depend>
@@ -61,6 +65,8 @@
   <build_depend>smach_ros</build_depend>
   <build_export_depend>smach_ros</build_export_depend>
   <exec_depend>smach_ros</exec_depend>
+
+	<exec_depend>message_generation</exec_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>
