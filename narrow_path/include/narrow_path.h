@@ -11,29 +11,23 @@
 #include <stdlib.h>
 #include <math.h>
 #include <vector>
+
+#include <actionlib/server/simple_action_server.h>
+#include <mission_planner/MissionPlannerAction.h>
 //#include <string>
 
 using namespace std;
-
-/*
-#define CONST_STEER 0
-#define CONST_SPEED 6
-#define FILTER_RAVA_RADIUS 0.1
-#define STEER_WEIGHT 22
-*/
-//#define DEBUG
 
 namespace narrow_path{
 
 class NarrowPath{
 	public:
-		NarrowPath();
-		NarrowPath(ros::NodeHandle nh);
+		NarrowPath(std::string name);
+		NarrowPath(std::string name, ros::NodeHandle nh);
 		void initSetup();
 		void obstacle_cb(const obstacle_detector::Obstacles data);
+		void goal_cb(const mission_planner::MissionPlannerGoalConstPtr &goal);
 		void run();
-		void calculate_points();
-		void publish();
 	
 		static bool cmp(const obstacle_detector::CircleObstacle a, const obstacle_detector::CircleObstacle b){
 			return (a.center.x < b.center.x);
@@ -43,6 +37,8 @@ class NarrowPath{
 		ros::NodeHandle nh_;
 		ros::Publisher pub;
 		ros::Subscriber sub;
+
+	  actionlib::SimpleActionServer<mission_planner::MissionPlannerAction> as_;
 
 		int steer;
 		int speed;

@@ -13,12 +13,21 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   geometry_msgs
   ackermann_msgs
+  actionlib_msgs
+)
+
+generate_messages(
+  DEPENDENCIES 
+  actionlib_msgs 
+  std_msgs
+  sensor_msgs
+  ackermann_msgs
 )
 
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES narrow_path
-  CATKIN_DEPENDS obstacle_detector roscpp rospy std_msgs
+  CATKIN_DEPENDS obstacle_detector roscpp rospy std_msgs actionlib_msgs
   DEPENDS system_lib
 )
 
@@ -33,4 +42,9 @@ include_directories(include
 )
 
 add_executable(narrow_path_node src/narrow_path.cpp src/narrow_path_node.cpp)
+#add_executable(narrow_path_action src/narrow_path_action_node.cpp src/narrow_path_action.cpp)
 target_link_libraries(narrow_path_node ${catkin_LIBRARIES})
+add_dependencies(
+  narrow_path_node
+  ${narrow_path_EXPORTED_TARGETS}
+)

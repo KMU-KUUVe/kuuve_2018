@@ -1,21 +1,18 @@
-#include "narrow_path.h"
-#include <actionlib/server/simple_action_server.h>
-#include <action_with_smach/MissionPlannerAction.h>
+#include "narrow_path_action.h"
 
-int main(int argc, char* argv[]) {
-	ros:: init(argc, argv, "narrow_path_node");
+namespace narrow_path_action{
+NarrowPathAction::NarrowPathAction(std::string name){
+	name_ = name;
+  as_ = SimpleActionServer<mission_planner::MissionPlannerAction>(nh_, name, &NarrowPathAction::action_cb, this);
+}
+/*
+NarrowPathAction::NarrowPathAction(std::string name, ros::NodeHandle nh) : NarrowPath(nh){
+	name_ = name;
+  as_ = SimpleActionServer<mission_planner::MissionPlannerAction>(nh_, name, &NarrowPathAction::action_cb, this);
+}
+*/
+void NarrowPathAction::action_cb(const mission_planner::MissionPlannerGoalConstPtr &goal){
+	self.run();
+}
 
-	ros::NodeHandle nh_;
-	actionlib::SimpleActionServer<action_with_smach::MissionPlannerAction> as_;
-	
-	//as_.waitForClient
-
-	narrow_path::NarrowPath node(nh_);
-
-	cout << "node start" << endl;
-	node.run();
-	//ros::Subscriber sub = nh.subscribe("raw_obstacles", 1, obstacle_cb);
-	//pub = nh.advertise<ackermann_msgs::AckermannDriveStamped> ("ackermann", 100);
-	//pub = nh.advertise<std_msgs::String>("write", 1000);
-	//ros::spin();
 }
