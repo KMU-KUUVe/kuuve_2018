@@ -58,14 +58,15 @@ def main():
     rospy.init_node('smach_example_state_machine')
 
     #Create a SMACH state machine
-    sm = smach.StateMachine(outcomes=['outcome4', 'outcome5'])
+    sm = smach.StateMachine(outcomes=['outcome5', 'outcome6'])
 
     #Open the container
     with sm:
-        smach.StateMachine.add('MissionManager', Foo(), transitions={'outcome1':'dynamic_avoidance', 'outcome2':'uturn', 'outcome3':'follow_line'})
+        smach.StateMachine.add('MissionManager', Foo(), transitions={'outcome1':'dynamic_avoidance', 'outcome2':'uturn', 'outcome3':'follow_line', 'outcome4':'narrow_path'})
         smach.StateMachine.add('dynamic_avoidance', Bar('dynamic_avoidance'), transitions={'outcome2':'MissionManager'})
         smach.StateMachine.add('uturn', Bar('uturn'), transitions={'outcome2':'MissionManager'})
         smach.StateMachine.add('follow_line', Bar('follow_line'), transitions={'outcome2':'MissionManager'})
+        smach.StateMachine.add('narrow_path', Bar('narrow_path'), transitions={'outcome2':'MissionManager'})
 
     sis = smach_ros.IntrospectionServer('server_name', sm, '/SM_ROOT')
     gtk_disable_setlocale()

@@ -84,6 +84,7 @@ void NarrowPath::obstacle_cb(const obstacle_detector::Obstacles data){
 
 void NarrowPath::goal_cb(const mission_planner::MissionPlannerGoalConstPtr &goal){
 	this->run();
+	ROS_INFO("Goal_callback");
 }
 
 void NarrowPath::run(){

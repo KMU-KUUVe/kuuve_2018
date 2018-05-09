@@ -38,14 +38,17 @@ private:
 	bool end_flag;
 	int sequence;
 	bool flag;
+	int end_count;
 
 	int CONST_VEL;
 	int CONST_STEER;
 	int DETECT_DISTANCE;
 	double OBSTACLE_RADIUS;
 	double TURN_FACTOR;
-	int TURN_WEIGHT;
-	int RETURN_WEIGHT;
+	int TURN_WEIGHT1;
+	int TURN_WEIGHT2;
+	int RETURN_WEIGHT1;
+	int RETURN_WEIGHT2;
 
 
 	vector<int> steer_buffer;
