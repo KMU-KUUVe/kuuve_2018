@@ -13,7 +13,7 @@ mission_code = '\0'
 #define state Foo
 class Foo(smach.State):
     def __init__(self):
-        smach.State.__init__(self, outcomes=['outcome1', 'outcome2', 'outcome3'])
+        smach.State.__init__(self, outcomes=['outcome1', 'outcome2', 'outcome3', 'outcome4'])
         self.key_value = '\0'
 
         self.key_sub = rospy.Subscriber('keyboard/keydown', Key, self.keyboard_cb, queue_size=1)
@@ -34,6 +34,8 @@ class Foo(smach.State):
                 return 'outcome1'
             elif self.key_value == '2':
                 return 'outcome2'
+            elif self.key_value == '3':
+                return 'outcome4'
 
 #define state Bar
 class Bar(smach.State):
@@ -69,7 +71,6 @@ def main():
         smach.StateMachine.add('narrow_path', Bar('narrow_path'), transitions={'outcome2':'MissionManager'})
 
     sis = smach_ros.IntrospectionServer('server_name', sm, '/SM_ROOT')
-    gtk_disable_setlocale()
     sis.start()
 
     #Execute SMACH plan
