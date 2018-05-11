@@ -16,6 +16,8 @@
 #include <mission_planner/MissionPlannerAction.h>
 //#include <string>
 
+//#define DEBUG
+
 using namespace std;
 
 namespace narrow_path{
@@ -38,7 +40,8 @@ class NarrowPath{
 		ros::Publisher pub;
 		ros::Subscriber sub;
 
-	  actionlib::SimpleActionServer<mission_planner::MissionPlannerAction> as_;
+		actionlib::SimpleActionServer<mission_planner::MissionPlannerAction> as_;
+		mission_planner::MissionPlannerResult result_;
 
 		int steer;
 		int speed;
@@ -46,12 +49,16 @@ class NarrowPath{
 		double mean_point_left_y;
 		double mean_point_y;
 
+		double one_side_gradient;
+		double one_side_weight;
+
 		int CONST_SPEED;
 		int CONST_STEER;
 		int STEER_WEIGHT;
 		double FILTER_RAVA_RADIUS;
 		int DETECT_DISTANCE;
 		bool end_flag;
+		int end_count;
 		
 		geometry_msgs::Point c;
 		vector<obstacle_detector::CircleObstacle> rava_circles;
