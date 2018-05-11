@@ -5,7 +5,8 @@
     <param name="CONST_SPEED" type="int"  value="6"/>
     <param name="CONST_STEER" type="int"  value="0"/>
     <param name="FILTER_RAVA_RADIUS" type="double"  value="0.1"/>
-    <param name="STEER_WEIGHT" type="int"  value="22"/>
+    <param name="STEER_WEIGHT" type="int"  value="30"/>
+    <param name="ONE_SIDE_WEIGHT" type="double"  value="-30.0"/>
     <param name="DETECT_DISTANCE" type="int"  value="4"/>
   </node>
 

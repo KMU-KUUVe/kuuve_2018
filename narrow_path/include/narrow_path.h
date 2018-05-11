@@ -49,6 +49,9 @@ class NarrowPath{
 		double mean_point_left_y;
 		double mean_point_y;
 
+		double one_side_gradient;
+		double one_side_weight;
+
 		int CONST_SPEED;
 		int CONST_STEER;
 		int STEER_WEIGHT;

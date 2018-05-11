@@ -24,6 +24,7 @@ void NarrowPath::initSetup(){
 	nh_.getParam("FILTER_RAVA_RADIUS", FILTER_RAVA_RADIUS);
 	nh_.getParam("DETECT_DISTANCE",DETECT_DISTANCE );
 	nh_.getParam("DETECT_DISTANCE", DETECT_DISTANCE);
+	nh_.getParam("ONE_SIDE_WEIGHT", one_side_weight);
 
 	ROS_INFO("const_speed:%d steer:%d", CONST_SPEED, CONST_STEER);
 
@@ -98,6 +99,9 @@ void NarrowPath::run(){
 		ros::spinOnce();			
 		steer = CONST_STEER;
 		speed = CONST_SPEED;
+		msg.drive.steering_angle = steer;
+		msg.drive.speed = speed;
+		pub.publish(msg);
 		ROS_INFO("approaching the obstacle");
 	}
 
@@ -113,6 +117,18 @@ void NarrowPath::run(){
 			
 			if (abs(right_circles[0].center.x - left_circles[0].center.x) > 1){
 				mean_point_y = 0;
+				one_side_gradient = (right_circles[1].center.y - right_circles[0].center.y)/(right_circles[1].center.x - right_circles[0].center.x);
+				if(right_circles[0].center.x < 0.7){
+					steer = one_side_gradient * int(one_side_weight);
+					ROS_INFO("right obstacles near.%f, %d", one_side_weight, steer);
+				}
+				else{
+					ROS_INFO("right obstacles far.");
+					steer = 0;
+				}
+				speed = CONST_SPEED;
+				msg.drive.steering_angle = steer;
+				msg.drive.speed = speed;
 				ROS_INFO("one_side detect");
 			}
 			else{
@@ -129,11 +145,10 @@ void NarrowPath::run(){
 				else{ 
 					mean_point_left_y = left_circles[0].center.y; 
 				}
+				mean_point_y = mean_point_right_y + mean_point_left_y;
+				steer = (mean_point_y * -STEER_WEIGHT) + CONST_STEER;
 			}
 
-			mean_point_y = mean_point_right_y + mean_point_left_y;
-
-			steer = (mean_point_y * -STEER_WEIGHT) + CONST_STEER;
 			speed = CONST_SPEED;
 			if(steer > 26){
 				steer = 26;
@@ -147,7 +162,7 @@ void NarrowPath::run(){
 		}
 		else{
 			end_count++;
-			if(end_count > 50){
+			if(end_count > 100){
 				end_flag = true;
 				steer = 0;
 				speed = 0;
