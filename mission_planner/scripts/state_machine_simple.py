@@ -13,7 +13,7 @@ mission_code = '\0'
 #define state Foo
 class Foo(smach.State):
     def __init__(self):
-        smach.State.__init__(self, outcomes=['outcome1', 'outcome2', 'outcome3', 'outcome4'])
+        smach.State.__init__(self, outcomes=['outcome1', 'outcome2', 'outcome3', 'outcome4', 'outcome5'])
         self.key_value = '\0'
 
         self.key_sub = rospy.Subscriber('keyboard/keydown', Key, self.keyboard_cb, queue_size=1)
@@ -34,8 +34,10 @@ class Foo(smach.State):
                 return 'outcome1'
             elif self.key_value == '2':
                 return 'outcome2'
-            elif self.key_value == '3':
+            elif self.key_value == '4':
                 return 'outcome4'
+            elif self.key_value == '5':
+                return 'outcome5'
 
 #define state Bar
 class Bar(smach.State):
@@ -60,15 +62,16 @@ def main():
     rospy.init_node('smach_example_state_machine')
 
     #Create a SMACH state machine
-    sm = smach.StateMachine(outcomes=['outcome5', 'outcome6'])
+    sm = smach.StateMachine(outcomes=['outcome6', 'outcome7'])
 
     #Open the container
     with sm:
-        smach.StateMachine.add('MissionManager', Foo(), transitions={'outcome1':'dynamic_avoidance', 'outcome2':'uturn', 'outcome3':'follow_line', 'outcome4':'narrow_path'})
+        smach.StateMachine.add('MissionManager', Foo(), transitions={'outcome1':'dynamic_avoidance', 'outcome2':'uturn', 'outcome3':'follow_line', 'outcome4':'narrow_path', 'outcome5':'static_avoidance'})
         smach.StateMachine.add('dynamic_avoidance', Bar('dynamic_avoidance'), transitions={'outcome2':'MissionManager'})
         smach.StateMachine.add('uturn', Bar('uturn'), transitions={'outcome2':'MissionManager'})
         smach.StateMachine.add('follow_line', Bar('follow_line'), transitions={'outcome2':'MissionManager'})
         smach.StateMachine.add('narrow_path', Bar('narrow_path'), transitions={'outcome2':'MissionManager'})
+        smach.StateMachine.add('static_avoidance', Bar('static_avoidance'), transitions={'outcome2':'MissionManager'})
 
     sis = smach_ros.IntrospectionServer('server_name', sm, '/SM_ROOT')
     sis.start()

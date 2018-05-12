@@ -11,23 +11,30 @@
 #include <math.h>
 #include <vector>
 #include <std_msgs/String.h>
-// #include <std_msgs/Empty.h>
+
+#include <actionlib/server/simple_action_server.h>
+#include <mission_planner/MissionPlanerAction.h>
+
 using namespace std;
 
 namespace static_avoidance{
 
 class StaticAvoidance{
 public:
-	StaticAvoidance();
-	StaticAvoidance(ros::NodeHandle nh);
+	StaticAvoidance(std::string name);
+	StaticAvoidance(std::string name, ros::NodeHandle nh);
 	void initSetup();
-    void obstacle_cb(const obstacle_detector::Obstacles& data);
+    	void obstacle_cb(const obstacle_detector::Obstacles& data);
+	void goal_cb(const mission_planner::MissionPlannerGoalConstPtr &goal);	
 	void run();
 
 private:
 	ros::NodeHandle nh_;
 	ros::Publisher pub;
 	ros::Subscriber sub;
+	
+	actionlib::SimpleActionServer<mission_planner::MissionPlannerAction> as_;
+	mission_planner::MissionPlannerResult result_;
 	
 	int steer;
 	int speed;

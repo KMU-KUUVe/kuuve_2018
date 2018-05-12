@@ -1,18 +1,22 @@
 #include "static_avoidance.h"
 
+using namespace std;
+
 namespace static_avoidance{
 
-	StaticAvoidance::StaticAvoidance():nh_("~"){
+	StaticAvoidance::StaticAvoidance(std::string name):as_(nh_, name, boost::bind(&StaticAvoiance::goal_cb, this, _1), false){
+		nh_ = ros::NodeHandle("~");
+		as_.start();
+		ROS_INFO("as start");
 		initSetup();
 	}
 
-	StaticAvoidance::StaticAvoidance(ros::NodeHandle nh):nh_(nh){
+	StaticAvoidance::StaticAvoidance(std::string name):as_(nh_, name, boost::bind(&StaticAvoiance::goal_cb, this, _1), false), nh_(nh){
+		as_.start();
 		initSetup();
 	}
 
 	void StaticAvoidance::initSetup(){
-		pub = nh_.advertise<ackermann_msgs::AckermannDriveStamped> ("/ackermann", 100);
-		sub = nh_.subscribe("/raw_obstacles", 100, &StaticAvoidance::obstacle_cb, this);
 		
 		turn_left_flag = false;
 		turn_right_flag = false;
@@ -50,6 +54,14 @@ namespace static_avoidance{
 			}	
 		}
 	}
+
+	void StaticAvoidance::goal_cb(const mission_planner::MissionPlannerGoalConstPtr & goal){
+		ROS_INFO("goal callback");
+		pub = nh_.advertise<ackermann_msgs::AckermannDriveStamped> ("/ackermann", 100);
+		sub = nh_.subscribe("/raw_obstacles", 100, &StaticAvoidance::obstacle_cb, this);
+		this->run();
+	}	
+
 	void StaticAvoidance::run(){
 		ros::Rate r(100);
 		nh_.getParam("CONST_VEL", CONST_VEL);
@@ -136,6 +148,12 @@ namespace static_avoidance{
 					ros::Duration(1.0).sleep();
 					steer = 0;
 					speed = 0;
+					msg.drive.steering_angle = steer;
+					msg.drive.speed = speed;
+					pub.publish(msg);
+					ROS_INFO("Static avoidance finish");
+					as_.setSucceeded(result_);
+					break;
 				}
 			}
 			else{
