@@ -57,12 +57,29 @@ class Uturn:
             self.pub.publish(acker_data)
         print("too close")
 
-        print("turn start")
-        #self.pub.publish("1100,1530,")
+        print("first left turn")
+        acker_data.drive.steering_angle = -26
+        acker_data.drive.speed = 6
+        self.pub.publish(acker_data)
+        rospy.sleep(8)
+
+        print("turn backward")
+        acker_data.drive.steering_angle = 26
+        acker_data.drive.speed = -6
+        self.pub.publish(acker_data)
+        rospy.sleep(4)
+
+        print("second left turn")
+        acker_data.drive.steering_angle = -26
+        acker_data.drive.speed = 6
+        self.pub.publish(acker_data)
+        rospy.sleep(6)
+
+        print("last right turn")
         acker_data.drive.steering_angle = 26
         acker_data.drive.speed = 6
         self.pub.publish(acker_data)
-        rospy.sleep(13)
+        rospy.sleep(5)
 
         print("finish")
         acker_data.drive.steering_angle = 0
