@@ -12,14 +12,14 @@
 #include <memory>
 #include "crosswalk_stop/CrosswalkStop.h"
 #include "lane_detector/ConditionalCompile.h"
-#include "crosswalk_stop/MissionPlannerAction.h"
+#include "mission_planner/MissionPlannerAction.h"
 
 class CrosswalkStopNode
 {
 public:
   CrosswalkStopNode();
 
-	void actionCallback(const crosswalk_stop::MissionPlannerGoalConstPtr& goal);
+	void actionCallback(const mission_planner::MissionPlannerGoalConstPtr& goal);
 
 	void imageCallback(const sensor_msgs::ImageConstPtr& image);
 
@@ -57,7 +57,7 @@ private:
 #endif
 	ros::Subscriber image_sub_;
 
-	actionlib::SimpleActionServer<crosswalk_stop::MissionPlannerAction> as_;
+	actionlib::SimpleActionServer<mission_planner::MissionPlannerAction> as_;
 
 	int throttle_ = 0;
 

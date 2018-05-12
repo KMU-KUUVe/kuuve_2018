@@ -44,7 +44,7 @@ LaneDetectorNode::LaneDetectorNode()
 	getRosParamForUpdate();
 }
 
-void LaneDetectorNode::actionCallback(const lane_detector::MissionPlannerGoalConstPtr& goal)
+void LaneDetectorNode::actionCallback(const mission_planner::MissionPlannerGoalConstPtr& goal)
 {
 	cout << "lane_detector actionCallback called!" << endl;
 	
@@ -60,7 +60,7 @@ void LaneDetectorNode::actionCallback(const lane_detector::MissionPlannerGoalCon
 	as_.publishFeedback(feedback);
 	*/
 
-	lane_detector::MissionPlannerResult result;
+	mission_planner::MissionPlannerResult result;
 	as_.setSucceeded(result);
 
 }

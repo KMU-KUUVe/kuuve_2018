@@ -12,14 +12,14 @@
 #include <memory>
 #include "lane_detector/InToOutLaneDetector.h"
 #include "lane_detector/ConditionalCompile.h"
-#include "lane_detector/MissionPlannerAction.h"
+#include "mission_planner/MissionPlannerAction.h"
 
 class LaneDetectorNode
 {
 public:
 	LaneDetectorNode();
 
-	void actionCallback(const lane_detector::MissionPlannerGoalConstPtr& goal);
+	void actionCallback(const mission_planner::MissionPlannerGoalConstPtr& goal);
 
 	void imageCallback(const sensor_msgs::ImageConstPtr& image);
 
@@ -58,7 +58,7 @@ private:
 #endif
 	ros::Subscriber image_sub_;
 
-	actionlib::SimpleActionServer<lane_detector::MissionPlannerAction> as_;
+	actionlib::SimpleActionServer<mission_planner::MissionPlannerAction> as_;
 
 	int throttle_ = 0;
 

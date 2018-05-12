@@ -46,7 +46,7 @@ CrosswalkStopNode::CrosswalkStopNode()
 	getRosParamForUpdate();
 }
 
-void CrosswalkStopNode::actionCallback(const crosswalk_stop::MissionPlannerGoalConstPtr& goal)
+void CrosswalkStopNode::actionCallback(const mission_planner::MissionPlannerGoalConstPtr& goal)
 {
 	cout << "crosswalk_stop actionCallback called!" << endl;
 	mission_start_ = true;
@@ -60,7 +60,7 @@ void CrosswalkStopNode::actionCallback(const crosswalk_stop::MissionPlannerGoalC
 
 	while(ros::ok()) {
 		if(mission_cleared_) {
-			crosswalk_stop::MissionPlannerResult result;
+			mission_planner::MissionPlannerResult result;
 			as_.setSucceeded(result);
 			break;
 		}
