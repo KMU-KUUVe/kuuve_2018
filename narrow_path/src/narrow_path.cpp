@@ -162,8 +162,10 @@ void NarrowPath::run(){
 		}
 		else{
 			end_count++;
+			ROS_INFO("end_count: %d", end_count);
 			if(end_count > 100){
 				end_flag = true;
+				ROS_INFO("end_flag: %d", end_flag);
 				steer = 0;
 				speed = 0;
 				msg.drive.steering_angle = steer;

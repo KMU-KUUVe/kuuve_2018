@@ -2,10 +2,10 @@
   <include file="$(find lms1xx)/launch/LMS1xx.launch" />
 
   <node pkg="narrow_path" name="narrow_path_node" type="narrow_path_node" output="screen">
-    <param name="CONST_SPEED" type="int"  value="6"/>
+    <param name="CONST_SPEED" type="int"  value="5"/>
     <param name="CONST_STEER" type="int"  value="0"/>
     <param name="FILTER_RAVA_RADIUS" type="double"  value="0.1"/>
-    <param name="STEER_WEIGHT" type="int"  value="30"/>
+    <param name="STEER_WEIGHT" type="int"  value="40"/>
     <param name="ONE_SIDE_WEIGHT" type="double"  value="-30.0"/>
     <param name="DETECT_DISTANCE" type="int"  value="4"/>
   </node>
@@ -14,7 +14,7 @@
   
 
   <node pkg="laser_filters" type="scan_to_scan_filter_chain" output="screen" name="laser_filter">
-    <rosparam command="load" file="$(find laser_filters)/examples/box_filter.yaml" />
+    <rosparam command="load" file="$(find narrow_path)/box_filter.yaml" />
   </node>
   
   <!-- <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rviz_config_path)"/>
