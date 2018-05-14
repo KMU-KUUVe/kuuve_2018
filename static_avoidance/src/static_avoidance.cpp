@@ -4,14 +4,14 @@ using namespace std;
 
 namespace static_avoidance{
 
-	StaticAvoidance::StaticAvoidance(std::string name):as_(nh_, name, boost::bind(&StaticAvoiance::goal_cb, this, _1), false){
+	StaticAvoidance::StaticAvoidance(std::string name):as_(nh_, name, boost::bind(&StaticAvoidance::goal_cb, this, _1), false){
 		nh_ = ros::NodeHandle("~");
 		as_.start();
 		ROS_INFO("as start");
 		initSetup();
 	}
 
-	StaticAvoidance::StaticAvoidance(std::string name):as_(nh_, name, boost::bind(&StaticAvoiance::goal_cb, this, _1), false), nh_(nh){
+	StaticAvoidance::StaticAvoidance(std::string name, ros::NodeHandle nh):as_(nh_, name, boost::bind(&StaticAvoidance::goal_cb, this, _1), false), nh_(nh){
 		as_.start();
 		initSetup();
 	}
@@ -145,7 +145,7 @@ namespace static_avoidance{
 					msg.drive.steering_angle = steer;
 					msg.drive.speed = speed;
 					pub.publish(msg);
-					ros::Duration(1.0).sleep();
+					ros::Duration(1.5).sleep();
 					steer = 0;
 					speed = 0;
 					msg.drive.steering_angle = steer;

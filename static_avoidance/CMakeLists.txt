@@ -14,12 +14,22 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   geometry_msgs
   ackermann_msgs
+  mission_planner
+  actionlib_msgs
+)
+
+generate_messages(
+  DEPENDENCIES
+  actionlib_msgs
+  std_msgs
+  sensor_msgs
+  ackermann_msgs
 )
 
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES static_avoidance 
-  CATKIN_DEPENDS obstacle_detector roscpp rospy std_msgs ackermann_msgs
+  CATKIN_DEPENDS obstacle_detector roscpp rospy std_msgs ackermann_msgs mission_planner actionlib_msgs
   DEPENDS system_lib
 )
 

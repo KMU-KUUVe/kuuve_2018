@@ -13,7 +13,7 @@
 #include <std_msgs/String.h>
 
 #include <actionlib/server/simple_action_server.h>
-#include <mission_planner/MissionPlanerAction.h>
+#include <mission_planner/MissionPlannerAction.h>
 
 using namespace std;
 

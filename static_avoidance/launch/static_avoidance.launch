@@ -8,10 +8,10 @@
 	  <param name="CONST_VEL" type="int" value="7"/>
 	  <param name="OBSTACLE_RADIUS" type="double" value="0.15"/>
 	  <param name="TURN_FACTOR" type="double" value="4"/>
-	  <param name="TURN_WEIGHT1" type="int" value="9"/>
+	  <param name="TURN_WEIGHT1" type="int" value="8"/>
 	  <param name="TURN_WEIGHT2" type="int" value="7"/>
-	  <param name="RETURN_WEIGHT1" type="int" value="13"/>
-	  <param name="RETURN_WEIGHT2" type="int" value="13"/>
+	  <param name="RETURN_WEIGHT1" type="int" value="14"/>
+	  <param name="RETURN_WEIGHT2" type="int" value="15"/>
   </node>
 	
 
