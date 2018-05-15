@@ -9,9 +9,9 @@ from cv_bridge import CvBridge, CvBridgeError
 from std_msgs.msg import String
 from std_msgs.msg import Int32
 
-imagePath = '/home/nvidia/image/sign.jpg'
-modelFullPath = '/home/nvidia/Downloads/output_graph.pb'
-labelsFullPath ='/home/nvidia/Downloads/output_labels.txt'
+imagePath = '/home/avees-server/image/sign.jpg'
+modelFullPath = '/home/avees-server/catkin_ws/src/kuuve_2018/traffic_sign/output_graph.pb'
+labelsFullPath ='/home/avees-server/catkin_ws/src/kuuve_2018/traffic_sign/output_labels.txt'
 
 
 pub = rospy.Publisher('sign', Int32, queue_size=10)
@@ -20,8 +20,8 @@ with tf.gfile.FastGFile(modelFullPath, 'rb') as f:
     graph_def = tf.GraphDef()
     graph_def.ParseFromString(f.read())
     _ = tf.import_graph_def(graph_def, name='')
-    with tf.Session() as sess:
-        softmax_tensor = sess.graph.get_tensor_by_name('final_result:0')
+    sess = tf.Session() 
+    softmax_tensor = sess.graph.get_tensor_by_name('final_result:0')
 
 def run_inference_on_image():
     tt = 0
@@ -58,51 +58,55 @@ def run_inference_on_image():
     for node_id in top_k:
         human_string = labels[node_id]
         score = predictions[node_id]
-	if score >= 0.8 :
+	if score >= 0.3 :
 	    if human_string == "parking" :
-		cnt1 = cnt1 + 1 
+			cnt1 = cnt1 + 1 
 	    elif human_string == "narrow" :
-		cnt2 = cnt2 + 1 
+			print("narrow")
+			pub.publish(mode)
+			cnt2 = cnt2 + 1 
 	    elif human_string == "curve" :
-		cnt3 = cnt3 + 1 
+			cnt3 = cnt3 + 1 
 	    elif human_string == "static" :
-		cnt4 = cnt4 + 1 
+			cnt4 = cnt4 + 1 
 	    elif human_string == "dynamic" :
-		cnt5 = cnt5 + 1 
+			cnt5 = cnt5 + 1 
 	    elif human_string == "uturn" :
-		cnt7 = cnt7 + 1 
+			cnt7 = cnt7 + 1 
 	    elif human_string == "pede" :
-		cnt9 = cnt9 + 1 
+			cnt9 = cnt9 + 1 
         print('%s (score = %.5f)' % (human_string, score))
     print("--------------------")
 
 
-    if(cnt1>5) :
-	mode = 1
-	pub.publish(mode)
-	cnt1 = 0
-	cnt2 = 0
-	cnt3 = 0
-	cnt4 = 0
-	cnt5 = 0
-	cnt7 = 0
-	cnt9 = 0
+    if(cnt1>2) :
+		mode = 1
+		pub.publish(mode)
+		cnt1 = 0
+		cnt2 = 0
+		cnt3 = 0
+		cnt4 = 0
+		cnt5 = 0
+		cnt7 = 0
+		cnt9 = 0
+		print(mode)
+		print("")
+		
+    elif(cnt2>2) :
+		mode = 2
+		rospy.info("narrow")
+		pub.publish(mode)
+		cnt1 = 0
+		cnt2 = 0
+		cnt3 = 0
+		cnt4 = 0
+		cnt5 = 0
+		cnt7 = 0
+		cnt9 = 0
+		print(mode)
+		print("")
 
-        print(mode)
-        print("")
-    elif(cnt2>5) :
-	mode = 2
-	pub.publish(mode)
-	cnt1 = 0
-	cnt2 = 0
-	cnt3 = 0
-	cnt4 = 0
-	cnt5 = 0
-	cnt7 = 0
-	cnt9 = 0
-        print(mode)
-        print("")
-    elif(cnt3>5) :
+    elif(cnt3>2) :
 	mode = 3
 	pub.publish(mode)
 	cnt1 = 0
@@ -114,7 +118,7 @@ def run_inference_on_image():
 	cnt9 = 0
         print(mode)
         print("")
-    elif(cnt4>5) :
+    elif(cnt4>2) :
 	mode = 4
 	pub.publish(mode)
 	cnt1 = 0
@@ -126,7 +130,7 @@ def run_inference_on_image():
 	cnt9 = 0
         print(mode)
         print("")
-    elif(cnt5>5) :
+    elif(cnt5>2) :
 	mode = 5
 	pub.publish(mode)
 	cnt1 = 0
@@ -138,7 +142,7 @@ def run_inference_on_image():
 	cnt9 = 0
         print(mode)
         print("")
-    elif(cnt7>5) :
+    elif(cnt7>2) :
 	mode = 7
 	pub.publish(mode)
 	cnt1 = 0
@@ -150,7 +154,7 @@ def run_inference_on_image():
 	cnt9 = 0
         print(mode)
         print("")
-    elif(cnt9>5) :
+    elif(cnt9>2) :
 	mode = 9
 	pub.publish(mode)
 	cnt1 = 0
@@ -168,7 +172,8 @@ class classifier:
     def __init__(self):
 	self.ccc = 0
 	self.bridge=CvBridge()
-	self.image_sub= rospy.Subscriber("test",Image,self.callback)
+#self.image_sub= rospy.Subscriber("test",Image,self.callback)
+	self.image_sub= rospy.Subscriber("/usb_cam/image_raw",Image,self.callback)
 	
         
     def callback(self,data):
