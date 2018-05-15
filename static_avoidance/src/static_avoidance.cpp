@@ -97,7 +97,7 @@ namespace static_avoidance{
 			//speed = CONST_VEL;
 			//avoidance right Obstacles
 			if(sequence == 1){
-				if(c.x > 0.5){
+				if(c.x > 0.7){
 					turn_left_flag = true;
 					return_right_flag = false;
 					turn_right_flag = false;
@@ -134,7 +134,7 @@ namespace static_avoidance{
 			end_count ++;
 			ROS_INFO("count : %d", end_count);
 			if( sequence == 2){
-				if(end_count >= 50){
+				if(end_count >= 30){
 					end_flag = true;
 					turn_left_flag = false;
 					turn_right_flag = false;

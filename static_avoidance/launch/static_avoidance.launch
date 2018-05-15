@@ -3,14 +3,14 @@
   <include file="$(find lms1xx)/launch/LMS1xx.launch"/>
   <arg name="rviz_config_path" default="$(find static_avoidance)/rviz_config/static_avoidance.rviz" />
   <node pkg="static_avoidance" name="static_avoidance_node" type="static_avoidance_node" output="screen">
-	  <param name="DETECT_DISTANCE" type="int" value="2"/>
+	  <param name="DETECT_DISTANCE" type="int" value="4"/>
 	  <param name="CONST_STEER" type="int" value="0"/>
 	  <param name="CONST_VEL" type="int" value="7"/>
 	  <param name="OBSTACLE_RADIUS" type="double" value="0.15"/>
 	  <param name="TURN_FACTOR" type="double" value="4"/>
-	  <param name="TURN_WEIGHT1" type="int" value="8"/>
-	  <param name="TURN_WEIGHT2" type="int" value="7"/>
-	  <param name="RETURN_WEIGHT1" type="int" value="14"/>
+	  <param name="TURN_WEIGHT1" type="int" value="7"/>
+	  <param name="TURN_WEIGHT2" type="int" value="5"/>
+	  <param name="RETURN_WEIGHT1" type="int" value="10"/>
 	  <param name="RETURN_WEIGHT2" type="int" value="15"/>
   </node>
 	
