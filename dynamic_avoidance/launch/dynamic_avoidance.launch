@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
   <include file="$(find lms1xx)/launch/LMS1xx.launch"/>
-  <node pkg="kuuve_lidar_missions" name="dynamic_avoidance" type="dynamic_avoidance.py" output="screen"/>
+  <node pkg="dynamic_avoidance" name="dynamic_avoidance" type="dynamic_avoidance.py" output="screen"/>
 
   <node pkg="platform_control" name="write_serial" type="write_serial" />
 
