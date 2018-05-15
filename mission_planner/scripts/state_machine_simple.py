@@ -5,8 +5,9 @@ import rospy
 import smach
 import smach_ros
 from keyboard.msg import Key
+from std_msgs.msg import Int32
 import actionlib
-from action_with_smach.msg import MissionPlannerAction, MissionPlannerGoal, MissionPlannerResult, MissionPlannerFeedback
+from mission_planner.msg import MissionPlannerAction, MissionPlannerGoal, MissionPlannerResult, MissionPlannerFeedback
 
 mission_code = '\0'
 
@@ -17,11 +18,17 @@ class Foo(smach.State):
         self.key_value = '\0'
 
         self.key_sub = rospy.Subscriber('keyboard/keydown', Key, self.keyboard_cb, queue_size=1)
+        self.int_sub = rospy.Subscriber('sign', Int32, self.sign_cb, queue_size=10)
 
     def keyboard_cb(self, data):
         self.key_value = chr(data.code)
         print(self.key_value)
 
+    def sign_cb(self, data):
+        self.key_value = chr(data)
+        rospy.info(self.key_value)
+        print(self.key_value)
+		
     def execute(self, userdata):
         rospy.loginfo('Executing state FOO')
         self.key_value = '\0'
@@ -68,7 +75,6 @@ def main():
         smach.StateMachine.add('follow_line', Bar('follow_line'), transitions={'outcome2':'MissionManager'})
 
     sis = smach_ros.IntrospectionServer('server_name', sm, '/SM_ROOT')
-    gtk_disable_setlocale()
     sis.start()
 
     #Execute SMACH plan
