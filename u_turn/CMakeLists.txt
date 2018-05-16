@@ -14,6 +14,7 @@ find_package(catkin REQUIRED
   sensor_msgs
   geometry_msgs
   obstacle_detector
+  ackermann_msgs
 )
 
 ## Generate messages in the 'msg' folder
@@ -49,7 +50,7 @@ generate_messages(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES static_avoidance
-  CATKIN_DEPENDS roscpp sensor_msgs geometry_msgs
+  CATKIN_DEPENDS roscpp sensor_msgs geometry_msgs ackermann_msgs
   DEPENDS system_lib
 )
 

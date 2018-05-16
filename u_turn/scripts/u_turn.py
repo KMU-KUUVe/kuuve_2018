@@ -48,7 +48,7 @@ class Uturn:
 
 
     def execute(self):
-        rospy.init_node('dynamic_avoidance', anonymous=True)
+        rospy.init_node('u_turn', anonymous=True)
         rate = rospy.Rate(100)
         acker_data = AckermannDriveStamped()
         while self.nearest_center_point.x > 4.3:
@@ -102,8 +102,8 @@ class Uturn:
 
 if __name__ == '__main__':
     try:
-        u_turn = Uturn()
-        u_turn.execute()
+        u_turn_mission = Uturn()
+        u_turn_mission.execute()
     except rospy.ROSInterruptException:
         print(error)
         pass
