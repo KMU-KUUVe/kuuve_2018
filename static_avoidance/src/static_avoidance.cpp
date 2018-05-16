@@ -43,7 +43,8 @@ namespace static_avoidance{
 			if( (data.circles[i].radius >= OBSTACLE_RADIUS) &&(sqrt(data.circles[i].center.x * data.circles[i].center.x + data.circles[i].center.y * data.circles[i].center.y)  <= DETECT_DISTANCE)) {
 				flag = true;
 				c = data.circles[i].center;
-				//ROS_INFO("CallBack c.x, c.y : %f, %f", c.x, c.y);
+				ROS_INFO("CallBack c.x, c.y : %f, %f", c.x, c.y);
+				ROS_INFO("radius : %f", data.circles[i].radius);
 				//c.y is lateral axis. so if c.y > 0 means the obstacles are on the left.
 				if(c.y < 0){
 					sequence = 1;
@@ -113,7 +114,7 @@ namespace static_avoidance{
 				}
 			}
 			else if(sequence == 2){
-				if(c.x > 0.5){
+				if(c.x > 0.7){
 					turn_right_flag = true;
 					return_left_flag = false;
 					turn_left_flag = false;
@@ -194,7 +195,7 @@ namespace static_avoidance{
 		if(steer < -26){
 			steer = -26;
 		}
-
+/*
 		// ackermann_msgs::AckermannDriveStamped msg;
 		//std_msgs::String msg;
 		//ROS_INFO("distance: %f", distance);
@@ -210,7 +211,7 @@ namespace static_avoidance{
 		ROS_INFO("end count : %d",end_count);
 		ROS_INFO("end flag : %d",end_flag);
 		ROS_INFO("Steer : %d Speed : %d", steer, speed);
-		ROS_INFO("-----------------------------------------");
+*/		ROS_INFO("-----------------------------------------");
 
 
 		//msg.data = std::to_string(steer) + "," + std::to_string(speed) + "," ;
