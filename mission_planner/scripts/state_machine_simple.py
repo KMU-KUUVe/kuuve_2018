@@ -9,47 +9,60 @@ from std_msgs.msg import Int32
 import actionlib
 from mission_planner.msg import MissionPlannerAction, MissionPlannerGoal, MissionPlannerResult, MissionPlannerFeedback
 
-mission_code = '\0'
+mission_init_code = '\0'
 
-#define state Foo
-class Foo(smach.State):
+crosswalk_code = '1'
+u_turn_code = '2'
+static_avoidance_code = '3'
+dynamic_avoidance_code = '4'
+narrow_path_code = '5'
+s_path_code = '6'
+
+#define state MissionManager
+class MissionManager(smach.State):
     def __init__(self):
-        smach.State.__init__(self, outcomes=['outcome1', 'outcome2', 'outcome3'])
-        self.key_value = '\0'
-
+        smach.State.__init__(self, outcomes=['crosswalk', 'u_turn', 'static_avoidance', 'dynamic_avoidance', 'narrow_path', 's_path'])
+        self.key_value = mission_init_code 
         self.key_sub = rospy.Subscriber('keyboard/keydown', Key, self.keyboard_cb, queue_size=1)
         self.int_sub = rospy.Subscriber('sign', Int32, self.sign_cb, queue_size=10)
 
     def keyboard_cb(self, data):
         self.key_value = chr(data.code)
-        print(self.key_value)
+        rospy.loginfo(self.key_value)
 
-    def sign_cb(self, data):
-        self.key_value = chr(data)
-        rospy.info(self.key_value)
-        print(self.key_value)
+    def sign_cb(self, int_msg):
+        int_msg.data = int_msg.data + 48
+        self.key_value = chr(int_msg.data)
+        rospy.loginfo(self.key_value)
 		
     def execute(self, userdata):
-        rospy.loginfo('Executing state FOO')
-        self.key_value = '\0'
-        print("key value=")
-        print(self.key_value)
-        while True:
-            if self.key_value == 'q':
-                return 'outcome3'
-            elif self.key_value == '1':
-                return 'outcome1'
-            elif self.key_value == '2':
-                return 'outcome2'
+        rospy.loginfo('Executing state MissionManager')
+        self.key_value = mission_init_code 
+        rospy.loginfo("key value = %s", self.key_value)
+        r = rospy.Rate(1000)
+        while not rospy.is_shutdown():
+            if self.key_value == crosswalk_code:
+                return 'crosswalk'
+            elif self.key_value == u_turn_code:
+                return 'u_turn'
+            elif self.key_value == static_avoidance_code:
+                return 'static_avoidance'
+            elif self.key_value == dynamic_avoidance_code:
+                return 'dynamic_avoidance'
+            elif self.key_value == narrow_path_code:
+                return 'narrow_path'
+            elif self.key_value == s_path_code:
+                return 's_path'
+            r.sleep()
 
-#define state Bar
-class Bar(smach.State):
+#define state Mission
+class Missions(smach.State):
         def __init__(self, client_name):
-                smach.State.__init__(self, outcomes=['outcome2'])
+                smach.State.__init__(self, outcomes=['finish'])
                 self.client_name = client_name
 
         def execute(self, userdata):
-                rospy.loginfo('Executing state BAR')
+                rospy.loginfo('Executing state %s', self.client_name)
                 client = actionlib.SimpleActionClient(self.client_name, MissionPlannerAction)
                 client.wait_for_server()
                 goal = MissionPlannerGoal() 
@@ -58,7 +71,7 @@ class Bar(smach.State):
                 client.send_goal(goal)
                 client.wait_for_result()
                 rospy.loginfo('%s finish'%self.client_name)
-                return 'outcome2'
+                return 'finish'
 
 #main
 def main():
@@ -69,10 +82,13 @@ def main():
 
     #Open the container
     with sm:
-        smach.StateMachine.add('MissionManager', Foo(), transitions={'outcome1':'dynamic_avoidance', 'outcome2':'uturn', 'outcome3':'follow_line'})
-        smach.StateMachine.add('dynamic_avoidance', Bar('dynamic_avoidance'), transitions={'outcome2':'MissionManager'})
-        smach.StateMachine.add('uturn', Bar('uturn'), transitions={'outcome2':'MissionManager'})
-        smach.StateMachine.add('follow_line', Bar('follow_line'), transitions={'outcome2':'MissionManager'})
+        smach.StateMachine.add('MissionManager', MissionManager(), transitions={'crosswalk':'crosswalk', 'static_avoidance':'static_avoidance', 'narrow_path':'narrow_path', 's_path':'s_path', 'dynamic_avoidance':'dynamic_avoidance', 'u_turn':'u_turn'})
+        smach.StateMachine.add('crosswalk', Missions('crosswalk'), transitions={'finish':'MissionManager'})
+        smach.StateMachine.add('u_turn', Missions('u_turn'), transitions={'finish':'MissionManager'})
+        smach.StateMachine.add('dynamic_avoidance', Missions('dynamic_avoidance'), transitions={'finish':'MissionManager'})
+        smach.StateMachine.add('static_avoidance', Missions('static_avoidance'), transitions={'finish':'MissionManager'})
+        smach.StateMachine.add('narrow_path', Missions('narrow_path'), transitions={'finish':'MissionManager'})
+        smach.StateMachine.add('s_path', Missions('s_path'), transitions={'finish':'MissionManager'})
 
     sis = smach_ros.IntrospectionServer('server_name', sm, '/SM_ROOT')
     sis.start()
