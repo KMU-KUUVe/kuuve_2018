@@ -46,12 +46,12 @@ generate_messages(
 )
 
 ## DEPENDS: system dependencies of this project that dependent projects also need
-catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES static_avoidance
-  CATKIN_DEPENDS roscpp sensor_msgs geometry_msgs
-  DEPENDS system_lib
-)
+#catkin_package(
+#  INCLUDE_DIRS include
+#  LIBRARIES static_avoidance
+#  CATKIN_DEPENDS roscpp sensor_msgs geometry_msgs
+#  DEPENDS system_lib
+#)
 
 ###########
 ## Build ##
