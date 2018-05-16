@@ -13,8 +13,15 @@ imagePath = '/home/hdh7485/sign.jpg'
 modelFullPath = '/home/hdh7485/catkin_ws/src/kuuve_2018/traffic_sign/output_graph.pb'
 labelsFullPath ='/home/hdh7485/catkin_ws/src/kuuve_2018/traffic_sign/output_labels.txt'
 
-
 pub = rospy.Publisher('sign', Int32, queue_size=10)
+
+crosswalk_code = 1
+u_turn_code = 2
+static_avoidance_code = 3
+dynamic_avoidance_code = 4
+narrow_path_code = 5
+s_path_code = 6
+parking_code = 7
 
 with tf.gfile.FastGFile(modelFullPath, 'rb') as f:
     graph_def = tf.GraphDef()
@@ -58,11 +65,12 @@ def run_inference_on_image():
     for node_id in top_k:
         human_string = labels[node_id]
         score = predictions[node_id]
-    if score >= 0.3 :
+    if score >= 0.5 :
         if human_string == "parking" :
+            rospy.loginfo("parking")
             cnt1 = cnt1 + 1 
         elif human_string == "narrow" :
-            print("narrow")
+            rospy.loginfo("narrow")
             pub.publish(mode)
             cnt2 = cnt2 + 1 
         elif human_string == "curve" :
@@ -80,8 +88,10 @@ def run_inference_on_image():
 
 
     if(cnt1>2) :
+        #parking
         mode = 1
-        pub.publish(mode)
+        rospy.info("parking")
+        pub.publish(parking_code)
         cnt1 = 0
         cnt2 = 0
         cnt3 = 0
@@ -95,7 +105,7 @@ def run_inference_on_image():
     elif(cnt2>2) :
         mode = 2
         rospy.info("narrow")
-        pub.publish(mode)
+        pub.publish(narrow_path_code)
         cnt1 = 0
         cnt2 = 0
         cnt3 = 0
@@ -108,7 +118,8 @@ def run_inference_on_image():
 
     elif(cnt3>2) :
         mode = 3
-        pub.publish(mode)
+        rospy.info("s_path")
+        pub.publish(s_path_code)
         cnt1 = 0
         cnt2 = 0
         cnt3 = 0
@@ -120,7 +131,8 @@ def run_inference_on_image():
         print("")
     elif(cnt4>2) :
         mode = 4
-        pub.publish(mode)
+        rospy.info("static_avoidance")
+        pub.publish(static_avoidance_code)
         cnt1 = 0
         cnt2 = 0
         cnt3 = 0

@@ -17,6 +17,7 @@ static_avoidance_code = '3'
 dynamic_avoidance_code = '4'
 narrow_path_code = '5'
 s_path_code = '6'
+parkinig_code = '7'
 
 #define state MissionManager
 class MissionManager(smach.State):
