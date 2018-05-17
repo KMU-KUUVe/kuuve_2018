@@ -22,7 +22,7 @@ parkinig_code = '7'
 #define state MissionManager
 class MissionManager(smach.State):
     def __init__(self):
-        smach.State.__init__(self, outcomes=['crosswalk', 'u_turn', 'static_avoidance', 'dynamic_avoidance', 'narrow_path', 's_path'])
+        smach.State.__init__(self, outcomes=['crosswalk', 'u_turn', 'static_avoidance', 'dynamic_avoidance', 'narrow_path', 's_path', 'parking'])
         self.key_value = mission_init_code 
         self.key_sub = rospy.Subscriber('keyboard/keydown', Key, self.keyboard_cb, queue_size=1)
         self.int_sub = rospy.Subscriber('sign', Int32, self.sign_cb, queue_size=10)
@@ -54,6 +54,8 @@ class MissionManager(smach.State):
                 return 'narrow_path'
             elif self.key_value == s_path_code:
                 return 's_path'
+            elif self.key_value == parking_code:
+                return 'parking'
             r.sleep()
 
 #define state Mission
@@ -90,6 +92,7 @@ def main():
         smach.StateMachine.add('static_avoidance', Missions('static_avoidance'), transitions={'finish':'MissionManager'})
         smach.StateMachine.add('narrow_path', Missions('narrow_path'), transitions={'finish':'MissionManager'})
         smach.StateMachine.add('s_path', Missions('s_path'), transitions={'finish':'MissionManager'})
+        smach.StateMachine.add('parking', Missions('parking'), transitions={'finish':'MissionManager'})
 
     sis = smach_ros.IntrospectionServer('server_name', sm, '/SM_ROOT')
     sis.start()

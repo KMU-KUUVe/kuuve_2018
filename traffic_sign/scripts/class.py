@@ -71,17 +71,21 @@ def run_inference_on_image():
             cnt1 = cnt1 + 1 
         elif human_string == "narrow" :
             rospy.loginfo("narrow")
-            pub.publish(mode)
             cnt2 = cnt2 + 1 
         elif human_string == "curve" :
+            rospy.loginfo("s_path")
             cnt3 = cnt3 + 1 
         elif human_string == "static" :
+            rospy.loginfo("static_avoidance")
             cnt4 = cnt4 + 1 
         elif human_string == "dynamic" :
+            rospy.loginfo("dynamic_avoidance")
             cnt5 = cnt5 + 1 
         elif human_string == "uturn" :
+            rospy.loginfo("u_turn")
             cnt7 = cnt7 + 1 
         elif human_string == "pede" :
+            rospy.loginfo("dynamic_avoidance")
             cnt9 = cnt9 + 1 
         print('%s (score = %.5f)' % (human_string, score))
     print("--------------------")
@@ -99,7 +103,6 @@ def run_inference_on_image():
         cnt5 = 0
         cnt7 = 0
         cnt9 = 0
-        print(mode)
         print("")
         
     elif(cnt2>2) :
@@ -113,7 +116,6 @@ def run_inference_on_image():
         cnt5 = 0
         cnt7 = 0
         cnt9 = 0
-        print(mode)
         print("")
 
     elif(cnt3>2) :
@@ -127,8 +129,8 @@ def run_inference_on_image():
         cnt5 = 0
         cnt7 = 0
         cnt9 = 0
-        print(mode)
         print("")
+
     elif(cnt4>2) :
         mode = 4
         rospy.info("static_avoidance")
@@ -140,11 +142,12 @@ def run_inference_on_image():
         cnt5 = 0
         cnt7 = 0
         cnt9 = 0
-        print(mode)
         print("")
+
     elif(cnt5>2) :
         mode = 5
-        pub.publish(mode)
+        rospy.info("dynamic_avoidance")
+        pub.publish(dynamic_avoidance_code)
         cnt1 = 0
         cnt2 = 0
         cnt3 = 0
@@ -152,11 +155,12 @@ def run_inference_on_image():
         cnt5 = 0
         cnt7 = 0
         cnt9 = 0
-        print(mode)
         print("")
+
     elif(cnt7>2) :
         mode = 7
-        pub.publish(mode)
+        rospy.info("u_turn")
+        pub.publish(u_turn_code)
         cnt1 = 0
         cnt2 = 0
         cnt3 = 0
@@ -164,11 +168,12 @@ def run_inference_on_image():
         cnt5 = 0
         cnt7 = 0
         cnt9 = 0
-        print(mode)
         print("")
+
     elif(cnt9>2) :
         mode = 9
-        pub.publish(mode)
+        rospy.info("dynamic_avoidance")
+        pub.publish(dynamic_avoidance_code)
         cnt1 = 0
         cnt2 = 0
         cnt3 = 0
@@ -176,16 +181,13 @@ def run_inference_on_image():
         cnt5 = 0
         cnt7 = 0
         cnt9 = 0
-        print(mode)
         print("")
 
 class classifier:
     def __init__(self):
         self.ccc = 0
         self.bridge=CvBridge()
-        #self.image_sub= rospy.Subscriber("test",Image,self.callback)
         self.image_sub= rospy.Subscriber("/usb_cam/image_raw",Image,self.callback)
-    
         
     def callback(self,data):
     try:
@@ -193,18 +195,12 @@ class classifier:
     except CvBrdigeError as e:
         print(e)
         
-    print("save_done")
-    
+    #print("save_done")
     self.ccc +=1
     if self.ccc == 5:
         cv2.imwrite(imagePath, cv_image)
             run_inference_on_image()
         self.ccc = 0
-
-
-
-
-
 
 def main(args):
     heybro= classifier()
@@ -216,9 +212,5 @@ def main(args):
         sess.close()
     cv2.destroyAllWindows()
 
-
-
 if __name__ == '__main__': 
     main(sys.argv)
-
-
