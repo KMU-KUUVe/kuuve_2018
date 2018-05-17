@@ -66,9 +66,9 @@ def main():
 
     #Open the container
     with sm:
-        smach.StateMachine.add('MissionManager', Foo(), transitions={'outcome1':'dynamic_avoidance', 'outcome2':'uturn', 'outcome3':'follow_line', 'outcome4':'narrow_path', 'outcome5':'static_avoidance'})
+        smach.StateMachine.add('MissionManager', Foo(), transitions={'outcome1':'dynamic_avoidance', 'outcome2':'u_turn', 'outcome3':'follow_line', 'outcome4':'narrow_path', 'outcome5':'static_avoidance'})
         smach.StateMachine.add('dynamic_avoidance', Bar('dynamic_avoidance'), transitions={'outcome2':'MissionManager'})
-        smach.StateMachine.add('uturn', Bar('uturn'), transitions={'outcome2':'MissionManager'})
+        smach.StateMachine.add('u_turn', Bar('u_turn'), transitions={'outcome2':'MissionManager'})
         smach.StateMachine.add('follow_line', Bar('follow_line'), transitions={'outcome2':'MissionManager'})
         smach.StateMachine.add('narrow_path', Bar('narrow_path'), transitions={'outcome2':'MissionManager'})
         smach.StateMachine.add('static_avoidance', Bar('static_avoidance'), transitions={'outcome2':'MissionManager'})
