@@ -47,10 +47,10 @@ class image_converter:
 
 
     hsv=cv2.cvtColor(imCrop2, cv2.COLOR_BGR2HSV)
-    lower_blue=np.array([105,50,50])	
+    lower_blue=np.array([105,50,30])	
     upper_blue=np.array([130,255,255])
     lower_red =np.array([0,70,50])
-    upper_red =np.array([90,255,255])
+    upper_red =np.array([10,255,255])
     lower_red2 =np.array([170,70,50])
     upper_red2 =np.array([180,255,255])
     mask_b=cv2.inRange(hsv, lower_blue,upper_blue)

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+  <node pkg="mission_planner" name="state_machine_simple" type="state_machine_simple.py" output="screen"/>
+  <node pkg="keyboard" name="keyboard" type="keyboard"/>
+  <node pkg="smach_viewer" name="smach_viewer" type="smach_viewer.py" output="screen"/>
+  <include file="$(find dynamic_avoidance)/launch/dynamic_avoidance.launch"/>
+  <include file="$(find traffic_sign)/launch/sign_test.launch"/>
+</launch>

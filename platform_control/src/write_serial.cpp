@@ -94,6 +94,7 @@ int main (int argc, char** argv){
 		ser.open();
 	}
 	catch (serial::IOException& e){
+		cout << e.what() << endl;
 		ROS_ERROR_STREAM("Unable to open port ");
 		return -1;
 	}

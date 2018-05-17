@@ -9,9 +9,20 @@ from cv_bridge import CvBridge, CvBridgeError
 from std_msgs.msg import String
 from std_msgs.msg import Int32
 
-imagePath = '/home/hdh7485/sign.jpg'
-modelFullPath = '/home/hdh7485/catkin_ws/src/kuuve_2018/traffic_sign/output_graph.pb'
-labelsFullPath ='/home/hdh7485/catkin_ws/src/kuuve_2018/traffic_sign/output_labels.txt'
+imagePath = '/home/avees-server/sign.jpg'
+modelFullPath = '/home/avees-server/catkin_ws/src/kuuve_2018/traffic_sign/output_graph.pb'
+labelsFullPath ='/home/avees-server/catkin_ws/src/kuuve_2018/traffic_sign/output_labels.txt'
+
+cnt1 = 0
+cnt2 = 0
+cnt3 = 0
+cnt4 = 0
+cnt5 = 0
+cnt6 = 0
+cnt7 = 0
+cnt9 = 0
+
+cntt = 3
 
 pub = rospy.Publisher('sign', Int32, queue_size=10)
 
@@ -31,20 +42,13 @@ with tf.gfile.FastGFile(modelFullPath, 'rb') as f:
     softmax_tensor = sess.graph.get_tensor_by_name('final_result:0')
 
 def run_inference_on_image():
-    tt = 0
+    global cnt1, cnt2, cnt3, cnt4, cnt5, cnt6, cnt7, cnt9
+    global cntt
+    '''tt = 0
     if tt == 0:
-        cnt1 = 0
-        cnt2 = 0
-        cnt3 = 0
-        cnt4 = 0
-        cnt5 = 0
-        cnt7 = 0
-        cnt9 = 0
-        mode = 0
-        count = 0
-        prev_mode =0
-        tt = 1
 
+        tt = 1
+'''
   #  global pub
     answer = None
 
@@ -65,120 +69,143 @@ def run_inference_on_image():
     for node_id in top_k:
         human_string = labels[node_id]
         score = predictions[node_id]
-    if score >= 0.5 :
-        if human_string == "parking" :
-            rospy.loginfo("parking")
-            cnt1 = cnt1 + 1 
-        elif human_string == "narrow" :
-            rospy.loginfo("narrow")
-            cnt2 = cnt2 + 1 
-        elif human_string == "curve" :
-            rospy.loginfo("s_path")
-            cnt3 = cnt3 + 1 
-        elif human_string == "static" :
-            rospy.loginfo("static_avoidance")
-            cnt4 = cnt4 + 1 
-        elif human_string == "dynamic" :
-            rospy.loginfo("dynamic_avoidance")
-            cnt5 = cnt5 + 1 
-        elif human_string == "uturn" :
-            rospy.loginfo("u_turn")
-            cnt7 = cnt7 + 1 
-        elif human_string == "pede" :
-            rospy.loginfo("dynamic_avoidance")
-            cnt9 = cnt9 + 1 
-        print('%s (score = %.5f)' % (human_string, score))
+        if score >= 0.7 :
+            if human_string == "parking" :
+                #rospy.loginfo("parking")
+                cnt1 = cnt1 + 1 
+            elif human_string == "narrow" :
+                #rospy.loginfo("narrow")
+                cnt2 = cnt2 + 1 
+            elif human_string == "curve" :
+                #rospy.loginfo("curve")
+                cnt3 = cnt3 + 1 
+            elif human_string == "static" :
+                #rospy.loginfo("static_avoidance")
+                cnt4 = cnt4 + 1 
+            elif human_string == "dynamic" :
+                #rospy.loginfo("dynamic_avoidance")
+                cnt5 = cnt5 + 1 
+            elif human_string == "corn" :
+                #rospy.loginfo("corn")
+                cnt6 = cnt6 + 1
+            elif human_string == "uturn" :
+                #rospy.loginfo("u_turn")
+                cnt7 = cnt7 + 1 
+            elif human_string == "pede" :
+                #rospy.loginfo("pede")
+                cnt9 = cnt9 + 1 
+                #print('%s (score = %.5f)' % (human_string, score))
+			    
     print("--------------------")
 
-
-    if(cnt1>2) :
+    #print(cnt1,cnt2,cnt3,cnt4,cnt5,cnt6,cnt7,cnt9)
+    if(cnt1>cntt) :
         #parking
         mode = 1
-        rospy.info("parking")
+        rospy.loginfo("parking")
         pub.publish(parking_code)
         cnt1 = 0
         cnt2 = 0
         cnt3 = 0
         cnt4 = 0
         cnt5 = 0
+	cnt6 = 0
         cnt7 = 0
         cnt9 = 0
         print("")
         
-    elif(cnt2>2) :
+    elif(cnt2>cntt) :
         mode = 2
-        rospy.info("narrow")
+        rospy.loginfo("narrow")
         pub.publish(narrow_path_code)
         cnt1 = 0
         cnt2 = 0
         cnt3 = 0
         cnt4 = 0
         cnt5 = 0
+	cnt6 = 0
         cnt7 = 0
         cnt9 = 0
         print("")
 
-    elif(cnt3>2) :
+    elif(cnt3>cntt) :
         mode = 3
-        rospy.info("s_path")
+        rospy.loginfo("s_path")
         pub.publish(s_path_code)
         cnt1 = 0
         cnt2 = 0
         cnt3 = 0
         cnt4 = 0
         cnt5 = 0
+	cnt6 = 0
         cnt7 = 0
         cnt9 = 0
         print("")
 
-    elif(cnt4>2) :
+    elif(cnt4>cntt) :
         mode = 4
-        rospy.info("static_avoidance")
+        rospy.loginfo("static_avoidance")
         pub.publish(static_avoidance_code)
         cnt1 = 0
         cnt2 = 0
         cnt3 = 0
         cnt4 = 0
         cnt5 = 0
+	cnt6 = 0
         cnt7 = 0
         cnt9 = 0
         print("")
 
-    elif(cnt5>2) :
+    elif(cnt5>cntt) :
         mode = 5
-        rospy.info("dynamic_avoidance")
+        rospy.loginfo("dynamic_avoidance")
         pub.publish(dynamic_avoidance_code)
         cnt1 = 0
         cnt2 = 0
         cnt3 = 0
         cnt4 = 0
         cnt5 = 0
+	cnt6 = 0
         cnt7 = 0
         cnt9 = 0
         print("")
 
-    elif(cnt7>2) :
+    elif(cnt6>cntt * 2) :
+        rospy.loginfo("corn")
+        cnt1 = 0
+        cnt2 = 0
+        cnt3 = 0
+        cnt4 = 0
+        cnt5 = 0
+	cnt6 = 0
+        cnt7 = 0
+        cnt9 = 0
+        print("")
+
+    elif(cnt7>cntt) :
         mode = 7
-        rospy.info("u_turn")
+        rospy.loginfo("u_turn--")
         pub.publish(u_turn_code)
         cnt1 = 0
         cnt2 = 0
         cnt3 = 0
         cnt4 = 0
         cnt5 = 0
+	cnt6 = 0
         cnt7 = 0
         cnt9 = 0
         print("")
 
-    elif(cnt9>2) :
+    elif(cnt9>cntt) :
         mode = 9
-        rospy.info("dynamic_avoidance")
+        rospy.loginfo("dynamic_avoidance")
         pub.publish(dynamic_avoidance_code)
         cnt1 = 0
         cnt2 = 0
         cnt3 = 0
         cnt4 = 0
         cnt5 = 0
+	cnt6 = 0
         cnt7 = 0
         cnt9 = 0
         print("")
@@ -187,7 +214,10 @@ class classifier:
     def __init__(self):
         self.ccc = 0
         self.bridge=CvBridge()
-        self.image_sub= rospy.Subscriber("/usb_cam/image_raw",Image,self.callback)
+        self.image_sub= rospy.Subscriber("test",Image,self.callback)
+
+
+
         
     def callback(self,data):
         try:

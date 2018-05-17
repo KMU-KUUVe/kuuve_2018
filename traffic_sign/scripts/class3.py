@@ -20,8 +20,8 @@ with tf.gfile.FastGFile(modelFullPath, 'rb') as f:
     graph_def = tf.GraphDef()
     graph_def.ParseFromString(f.read())
     _ = tf.import_graph_def(graph_def, name='')
-    with tf.Session() as sess:
-        softmax_tensor = sess.graph.get_tensor_by_name('final_result:0')
+    sess = tf.Session()
+    softmax_tensor = sess.graph.get_tensor_by_name('final_result:0')
 
 def run_inference_on_image():
     tt = 0
@@ -73,7 +73,7 @@ def run_inference_on_image():
 		cnt7 = cnt7 + 1 
 	    elif human_string == "pede" :
 		cnt9 = cnt9 + 1 
-        print('%s (score = %.5f)' % (human_string, score))
+            print('%s (score = %.5f)' % (human_string, score))
     print("--------------------")
 
 
@@ -177,7 +177,7 @@ class classifier:
 	except CvBrdigeError as e:
 	    print(e)
         
-	print("save_done")
+	#print("save_done")
 	
 	self.ccc +=1
 	if self.ccc == 5:
