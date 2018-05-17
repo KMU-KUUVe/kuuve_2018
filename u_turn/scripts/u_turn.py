@@ -48,21 +48,51 @@ class Uturn:
 
 
     def execute(self):
-        rospy.init_node('dynamic_avoidance', anonymous=True)
+        rospy.init_node('u_turn', anonymous=True)
         rate = rospy.Rate(100)
         acker_data = AckermannDriveStamped()
-        while self.nearest_center_point.x > 5.0:
+        while self.nearest_center_point.x > 4.3:
+            print("approaching cones")
             acker_data.drive.steering_angle = 0
             acker_data.drive.speed = 7
             self.pub.publish(acker_data)
         print("too close")
 
-        print("turn start")
-        #self.pub.publish("1100,1530,")
+        print("first left turn")
+        acker_data.drive.steering_angle = -27
+        acker_data.drive.speed = 6
+        self.pub.publish(acker_data)
+        rospy.sleep(6)
+
+        print("stop")
+        acker_data.drive.steering_angle = 0
+        acker_data.drive.speed = 0
+        self.pub.publish(acker_data)
+        rospy.sleep(1)
+
+        print("turn backward")
+        acker_data.drive.steering_angle = 20
+        acker_data.drive.speed = -6
+        self.pub.publish(acker_data)
+        rospy.sleep(3)
+
+        print("stop")
+        acker_data.drive.steering_angle = 0
+        acker_data.drive.speed = 0
+        self.pub.publish(acker_data)
+        rospy.sleep(1)
+
+        print("second left turn")
+        acker_data.drive.steering_angle = -27
+        acker_data.drive.speed = 6
+        self.pub.publish(acker_data)
+        rospy.sleep(10)
+
+        print("last right turn")
         acker_data.drive.steering_angle = 26
         acker_data.drive.speed = 6
         self.pub.publish(acker_data)
-        rospy.sleep(13)
+        rospy.sleep(1.3)
 
         print("finish")
         acker_data.drive.steering_angle = 0
@@ -72,8 +102,8 @@ class Uturn:
 
 if __name__ == '__main__':
     try:
-        u_turn = Uturn()
-        u_turn.execute()
+        u_turn_mission = Uturn()
+        u_turn_mission.execute()
     except rospy.ROSInterruptException:
         print(error)
         pass

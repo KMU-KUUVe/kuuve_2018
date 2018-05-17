@@ -20,7 +20,7 @@ class DynamicAvoidance:
 #        self.nearest_obstacle = self.obstacles_data.segments[0]
         self.nearest_obstacle = SegmentObstacle()
         self.nearest_center_point = Point(100, 0, 0)
-
+        end_count = 0
     def calc_distance(self, point):
         distance = (point.x)**2 + (point.y)**2
         return distance
@@ -37,11 +37,10 @@ class DynamicAvoidance:
             if self.calc_distance(self.nearest_center_point) > self.calc_distance(self.center_point) and self.center_point.x > 0 and self.center_point.y > -0.3 and self.center_point.y < 0.3:
                 self.nearest_center_point = self.center_point
                 self.nearest_obstacle = obstacle
-                '''
-        print(self.nearest_center_point)
-        print(self.nearest_obstacle)
-        print('-------------------')
-'''
+        #print(self.nearest_center_point)
+        #print(self.nearest_center_point.x)
+        #print(self.nearest_obstacle)
+        #print('-------------------')
 
     def execute(self):
         rospy.init_node('dynamic_avoidance', anonymous=True)
@@ -54,12 +53,20 @@ class DynamicAvoidance:
 
         print("too close")
 
-        while self.nearest_center_point.x < 4.0:
-            acker_data.drive.steering_angle = 0
-            acker_data.drive.speed = 0
-            self.pub.publish(acker_data)
-
-            rate.sleep()
+        
+        if self.nearest_center_point.x < 4.0:
+            while self.nearest_center_point.x < 4.0:
+                acker_data.drive.steering_angle = 0
+                acker_data.drive.speed = 0
+                self.pub.publish(acker_data)
+                print("stop while")
+                end_count = 0 
+            while self.nearest_center_point.x > 3.0:
+                end_count = end_count + 1
+#                print(end_count)
+                if(end_count >= 50):
+                    break
+                    
 
         print("obstacle dissapear")
         acker_data.drive.steering_angle = 0
@@ -70,6 +77,8 @@ class DynamicAvoidance:
         acker_data.drive.steering_angle = 0
         acker_data.drive.speed = 0
         self.pub.publish(acker_data)
+        print("finish")
+            
 
 if __name__ == '__main__':
     try:
