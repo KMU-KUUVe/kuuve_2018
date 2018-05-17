@@ -53,7 +53,7 @@ void NarrowPath::obstacle_cb(const obstacle_detector::Obstacles data){
 		if(data.circles[i].radius > FILTER_RAVA_RADIUS){
 			rava_circles.push_back(data.circles[i]);
 		}
-		if(sqrt(data.circles[i].center.x * data.circles[i].center.x + data.circles[i].center.y * data.circles[i].center.y)  <= DETECT_DISTANCE) {
+		if((data.circles[i].radius > FILTER_RAVA_RADIUS) && sqrt(data.circles[i].center.x * data.circles[i].center.x + data.circles[i].center.y * data.circles[i].center.y)  <= DETECT_DISTANCE) {
 				c = data.circles[i].center;
 		}
 	}

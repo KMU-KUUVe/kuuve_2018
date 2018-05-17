@@ -6,7 +6,7 @@
 	  <param name="DETECT_DISTANCE" type="int" value="4"/>
 	  <param name="CONST_STEER" type="int" value="0"/>
 	  <param name="CONST_VEL" type="int" value="7"/>
-	  <param name="OBSTACLE_RADIUS" type="double" value="0.40"/>
+	  <param name="OBSTACLE_RADIUS" type="double" value="0.20"/>
 	  <param name="TURN_FACTOR" type="double" value="4"/>
 	  <param name="TURN_WEIGHT1" type="int" value="7"/>
 	  <param name="TURN_WEIGHT2" type="int" value="4"/>
