@@ -1,22 +1,18 @@
 #include "static_avoidance.h"
 
-using namespace std;
-
 namespace static_avoidance{
 
-	StaticAvoidance::StaticAvoidance(std::string name):as_(nh_, name, boost::bind(&StaticAvoidance::goal_cb, this, _1), false){
-		nh_ = ros::NodeHandle("~");
-		as_.start();
-		ROS_INFO("as start");
+	StaticAvoidance::StaticAvoidance():nh_("~"){
 		initSetup();
 	}
 
-	StaticAvoidance::StaticAvoidance(std::string name, ros::NodeHandle nh):as_(nh_, name, boost::bind(&StaticAvoidance::goal_cb, this, _1), false), nh_(nh){
-		as_.start();
+	StaticAvoidance::StaticAvoidance(ros::NodeHandle nh):nh_(nh){
 		initSetup();
 	}
 
 	void StaticAvoidance::initSetup(){
+		pub = nh_.advertise<ackermann_msgs::AckermannDriveStamped> ("/ackermann", 100);
+		sub = nh_.subscribe("/raw_obstacles", 100, &StaticAvoidance::obstacle_cb, this);
 		
 		turn_left_flag = false;
 		turn_right_flag = false;
@@ -26,7 +22,6 @@ namespace static_avoidance{
 		sequence = 0;
 		//flag = false;
 		c.x = 100;
-		end_count = 0;
 
 	}
 
@@ -39,12 +34,12 @@ namespace static_avoidance{
 		flag = false;
 		speed = CONST_VEL;
 		//steer = CONST_STEER;
+		// Select nearest point and assign it to 'c'
 		for(int i = 0; i < data.circles.size(); i++) {
-			if( (data.circles[i].radius >= OBSTACLE_RADIUS) &&(sqrt(data.circles[i].center.x * data.circles[i].center.x + data.circles[i].center.y * data.circles[i].center.y)  <= DETECT_DISTANCE)) {
+			if( (data.circles[i].radius >= OBSTACLE_RADIUS) && (sqrt(data.circles[i].center.x * data.circles[i].center.x + data.circles[i].center.y * data.circles[i].center.y)  <= DETECT_DISTANCE)) {
 				flag = true;
 				c = data.circles[i].center;
-				ROS_INFO("CallBack c.x, c.y : %f, %f", c.x, c.y);
-				ROS_INFO("radius : %f", data.circles[i].radius);
+				//ROS_INFO("CallBack c.x, c.y : %f, %f", c.x, c.y);
 				//c.y is lateral axis. so if c.y > 0 means the obstacles are on the left.
 				if(c.y < 0){
 					sequence = 1;
@@ -55,14 +50,6 @@ namespace static_avoidance{
 			}	
 		}
 	}
-
-	void StaticAvoidance::goal_cb(const mission_planner::MissionPlannerGoalConstPtr & goal){
-		ROS_INFO("goal callback");
-		pub = nh_.advertise<ackermann_msgs::AckermannDriveStamped> ("/ackermann", 100);
-		sub = nh_.subscribe("/raw_obstacles", 100, &StaticAvoidance::obstacle_cb, this);
-		this->run();
-	}	
-
 	void StaticAvoidance::run(){
 		ros::Rate r(100);
 		nh_.getParam("CONST_VEL", CONST_VEL);
@@ -70,10 +57,8 @@ namespace static_avoidance{
 		nh_.getParam("CONST_STEER", CONST_STEER);
 		nh_.getParam("OBSTACLE_RADIUS", OBSTACLE_RADIUS);
 		nh_.getParam("TURN_FACTOR", TURN_FACTOR);
-		nh_.getParam("TURN_WEIGHT1", TURN_WEIGHT1);
-		nh_.getParam("TURN_WEIGHT2", TURN_WEIGHT2);
-		nh_.getParam("RETURN_WEIGHT1", RETURN_WEIGHT1);
-		nh_.getParam("RETURN_WEIGHT2", RETURN_WEIGHT2);
+		nh_.getParam("TURN_WEIGHT", TURN_WEIGHT);
+		nh_.getParam("RETURN_WEIGHT", RETURN_WEIGHT);
 		
 		while(c.x >= DETECT_DISTANCE && ros::ok()){
 			ros::spinOnce();			
@@ -98,7 +83,7 @@ namespace static_avoidance{
 			//speed = CONST_VEL;
 			//avoidance right Obstacles
 			if(sequence == 1){
-				if(c.x > 0.7){
+				if(c.x > 0.05){
 					turn_left_flag = true;
 					return_right_flag = false;
 					turn_right_flag = false;
@@ -110,11 +95,11 @@ namespace static_avoidance{
 					turn_left_flag = false;
 					turn_right_flag = false;
 					return_left_flag = false;
-					end_flag = false;
+				end_flag = false;
 				}
 			}
 			else if(sequence == 2){
-				if(c.x > 0.7){
+				if(c.x > 0.05){
 					turn_right_flag = true;
 					return_left_flag = false;
 					turn_left_flag = false;
@@ -129,64 +114,34 @@ namespace static_avoidance{
 					end_flag = false;
 				}
 			}
-		end_count = 0;
+
 		}
 		else if(flag == 0){
-			end_count ++;
-			ROS_INFO("count : %d", end_count);
-			if( sequence == 2){
-				if(end_count >= 30){
-					end_flag = true;
-					turn_left_flag = false;
-					turn_right_flag = false;
-					return_left_flag = false;
-					return_right_flag = false;
-					steer = -20;
-					speed = 7;
-					msg.drive.steering_angle = steer;
-					msg.drive.speed = speed;
-					pub.publish(msg);
-					ros::Duration(1.5).sleep();
-					steer = 0;
-					speed = 0;
-					msg.drive.steering_angle = steer;
-					msg.drive.speed = speed;
-					pub.publish(msg);
-					ROS_INFO("Static avoidance finish");
-					as_.setSucceeded(result_);
-					break;
-				}
-			}
-			else{
-				if(end_count >= 200){
-					steer = -2;
-					turn_left_flag = false;
-					turn_right_flag = false;
-					return_left_flag = false;
-					return_right_flag = false;
-				}
-			}
-
-			/*
+			end_flag = true;
 			turn_left_flag = false;
 			turn_right_flag = false;
 			return_left_flag = false;
-			return_right_flag = false;*/
+			return_right_flag = false;
+			steer = 0;
+			speed = 0;
 		}
-
 
 
 		if(turn_left_flag){
-			steer = int(CONST_STEER - ((TURN_FACTOR - distance) * TURN_WEIGHT1));
+			steer = int(CONST_STEER - ((TURN_FACTOR - distance) * TURN_WEIGHT));
+			//turn_left_flag = false;
 		}
 		if(return_right_flag){
-			steer = int(CONST_STEER + (distance * RETURN_WEIGHT1));
+			steer = int(CONST_STEER + (distance * RETURN_WEIGHT));
+			return_right_flag = false;
 		}
 		if(turn_right_flag){
-			steer = int(CONST_STEER + ((TURN_FACTOR - distance) * TURN_WEIGHT2));
+			steer = int(CONST_STEER + ((TURN_FACTOR - distance) * TURN_WEIGHT));
+			//turn_right_flag = false;
 		}
 		if(return_left_flag){
-			steer = int(CONST_STEER - (distance * RETURN_WEIGHT2));
+			steer = int(CONST_STEER - (distance * TURN_WEIGHT));
+			return_left_flag = false;
 		}
 
 		if(steer > 26){
@@ -195,7 +150,7 @@ namespace static_avoidance{
 		if(steer < -26){
 			steer = -26;
 		}
-/*
+
 		// ackermann_msgs::AckermannDriveStamped msg;
 		//std_msgs::String msg;
 		//ROS_INFO("distance: %f", distance);
@@ -205,18 +160,15 @@ namespace static_avoidance{
 		//ROS_INFO("c.y : %f", c.y);
 		ROS_INFO("flag : %d",flag);
 		ROS_INFO("left turn flag : %d", turn_left_flag);
-		ROS_INFO("return right flag : %d", return_right_flag);
 		ROS_INFO("right turn flag : %d", turn_right_flag);
-		ROS_INFO("return left flag : %d", return_left_flag);
-		ROS_INFO("end count : %d",end_count);
 		ROS_INFO("end flag : %d",end_flag);
 		ROS_INFO("Steer : %d Speed : %d", steer, speed);
-*/		ROS_INFO("-----------------------------------------");
+		ROS_INFO("-----------------------------------------");
 
 
 		//msg.data = std::to_string(steer) + "," + std::to_string(speed) + "," ;
-		msg.drive.steering_angle = steer;
-		msg.drive.speed = speed;
+		 msg.drive.steering_angle = steer;
+		 msg.drive.speed = speed;
 		pub.publish(msg);
 	
 		r.sleep();

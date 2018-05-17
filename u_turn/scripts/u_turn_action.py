@@ -11,15 +11,15 @@ from obstacle_detector.msg import Obstacles
 from obstacle_detector.msg import SegmentObstacle 
 from geometry_msgs.msg import Point
 
-from action_with_smach.msg import MissionPlannerAction, MissionPlannerGoal, MissionPlannerResult, MissionPlannerFeedback
+from mission_planner.msg import MissionPlannerAction, MissionPlannerGoal, MissionPlannerResult, MissionPlannerFeedback
 from u_turn import Uturn 
 
 def execute_cb(goal):
     rospy.loginfo("Goal Received")
-    u_turn = Uturn()
+    u_turn_mission = Uturn()
     result = MissionPlannerResult()
     result.time_elapsed = rospy.Duration(1)
-    u_turn.execute()
+    u_turn_mission.execute()
     action_server.set_succeeded(result)
 		
 if __name__ == '__main__':
