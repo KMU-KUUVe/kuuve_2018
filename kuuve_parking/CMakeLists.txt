@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(lane_detector)
+project(kuuve_parking)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
@@ -15,6 +15,8 @@ find_package(catkin REQUIRED COMPONENTS
 	sensor_msgs
 	actionlib_msgs
 	actionlib
+	obstacle_detector
+	geometry_msgs
 )
 
 #find_package(OpenCV 3 REQUIRED)
@@ -22,6 +24,7 @@ find_package(catkin REQUIRED COMPONENTS
 #include_directories(${OpenCV_INCLUDE_DIRS})
 
 ## System dependencies are found with CMake's conventions
+# find_package(Boost REQUIRED COMPONENTS system)
 find_package(Boost REQUIRED COMPONENTS system)
 
 add_action_files(
@@ -32,6 +35,7 @@ add_action_files(
 generate_messages(
 	DEPENDENCIES actionlib_msgs
 )
+
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -121,7 +125,7 @@ generate_messages(
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES opencv_test
-  CATKIN_DEPENDS roscpp std_msgs sensor_msgs actionlib_msgs
+  CATKIN_DEPENDS roscpp std_msgs sensor_msgs actionlib_msgs obstacle_detector
   DEPENDS system_lib
 )
 
@@ -140,6 +144,10 @@ include_directories(
 )
 
 include_directories(
+	${lane_detector_SOURCE_DIR}/include
+)
+
+include_directories(
 	include ${Boost_INCLUDE_DIRS}
 )
 
@@ -155,8 +163,8 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(lane_detector src/main.cpp src/LinePointDetector.cpp src/LaneDetector.cpp src/InToOutLaneDetector.cpp src/LaneDetectorNode.cpp src/MyException.cpp)
-add_dependencies(lane_detector ${lane_detector_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(lane_detector
+add_executable(kuuve_parking src/main.cpp src/LineDetector.cpp src/ParkingNode.cpp)
+add_dependencies(kuuve_parking ${kuuve_parking_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(kuuve_parking
   ${catkin_LIBRARIES}
 )
