@@ -33,17 +33,17 @@ with tf.gfile.FastGFile(modelFullPath, 'rb') as f:
 def run_inference_on_image():
     tt = 0
     if tt == 0:
-    cnt1 = 0
-    cnt2 = 0
-    cnt3 = 0
-    cnt4 = 0
-    cnt5 = 0
-    cnt7 = 0
-    cnt9 = 0
-    mode = 0
-    count = 0
-    prev_mode =0
-    tt = 1
+        cnt1 = 0
+        cnt2 = 0
+        cnt3 = 0
+        cnt4 = 0
+        cnt5 = 0
+        cnt7 = 0
+        cnt9 = 0
+        mode = 0
+        count = 0
+        prev_mode =0
+        tt = 1
 
   #  global pub
     answer = None
@@ -190,17 +190,17 @@ class classifier:
         self.image_sub= rospy.Subscriber("/usb_cam/image_raw",Image,self.callback)
         
     def callback(self,data):
-    try:
-        cv_image=self.bridge.imgmsg_to_cv2(data,"bgr8")
-    except CvBrdigeError as e:
-        print(e)
+        try:
+            cv_image=self.bridge.imgmsg_to_cv2(data,"bgr8")
+        except CvBrdigeError as e:
+            print(e)
         
     #print("save_done")
-    self.ccc +=1
-    if self.ccc == 5:
-        cv2.imwrite(imagePath, cv_image)
+        self.ccc +=1
+        if self.ccc == 5:
+            cv2.imwrite(imagePath, cv_image)
             run_inference_on_image()
-        self.ccc = 0
+            self.ccc = 0
 
 def main(args):
     heybro= classifier()
