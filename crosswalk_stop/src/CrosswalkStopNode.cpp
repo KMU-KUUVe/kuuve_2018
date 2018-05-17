@@ -27,7 +27,8 @@ CrosswalkStopNode::CrosswalkStopNode()
 #endif
 
 #if WEBCAM
-	image_sub_ = nh_.subscribe("/usb_cam/image_raw", 1, &CrosswalkStopNode::imageCallback, this);
+	//image_sub_ = nh_.subscribe("/usb_cam/image_raw", 1, &CrosswalkStopNode::imageCallback, this);
+	image_sub_ = nh_.subscribe("/center_image_raw", 1, &CrosswalkStopNode::imageCallback, this);
 #elif	PROSILICA_GT_CAM
 	image_sub_ = nh_.subscribe("/camera/image_raw", 1, &CrosswalkStopNode::imageCallback, this);
 #endif
@@ -62,6 +63,7 @@ void CrosswalkStopNode::actionCallback(const crosswalk_stop::MissionPlannerGoalC
 		if(mission_cleared_) {
 			crosswalk_stop::MissionPlannerResult result;
 			as_.setSucceeded(result);
+			mission_start_ = false;
 			break;
 		}
 		r.sleep();	// sleep 0.1 sec
