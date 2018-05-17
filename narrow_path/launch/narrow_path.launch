@@ -2,9 +2,9 @@
   <include file="$(find lms1xx)/launch/LMS1xx.launch" />
 
   <node pkg="narrow_path" name="narrow_path_node" type="narrow_path_node" output="screen">
-    <param name="CONST_SPEED" type="int"  value="5"/>
+    <param name="CONST_SPEED" type="int"  value="10"/>
     <param name="CONST_STEER" type="int"  value="0"/>
-    <param name="FILTER_RAVA_RADIUS" type="double"  value="0.1"/>
+    <param name="FILTER_RAVA_RADIUS" type="double"  value="0.17"/>
     <param name="STEER_WEIGHT" type="int"  value="40"/>
     <param name="ONE_SIDE_WEIGHT" type="double"  value="-30.0"/>
     <param name="DETECT_DISTANCE" type="int"  value="4"/>
@@ -32,13 +32,13 @@
 
     <param name="min_group_points"     value="5"/>
 
-    <param name="max_group_distance"   value="0.1"/>
+    <param name="max_group_distance"   value="0.05"/>
     <param name="distance_proportion"  value="0.00628"/>
     <param name="max_split_distance"   value="0.2"/>
     <param name="max_merge_separation" value="0.2"/>
     <param name="max_merge_spread"     value="0.2"/>
-    <param name="max_circle_radius"    value="1.0"/>
-    <param name="radius_enlargement"   value="0.3"/>
+    <param name="max_circle_radius"    value="0.5"/>
+    <param name="radius_enlargement"   value="0.1"/>
 
     <param name="frame_id"             value="laser"/>
   </node>
