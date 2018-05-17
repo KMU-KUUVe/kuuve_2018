@@ -50,7 +50,7 @@ class image_converter:
     lower_blue=np.array([105,50,50])	
     upper_blue=np.array([130,255,255])
     lower_red =np.array([0,70,50])
-    upper_red =np.array([10,255,255])
+    upper_red =np.array([90,255,255])
     lower_red2 =np.array([170,70,50])
     upper_red2 =np.array([180,255,255])
     mask_b=cv2.inRange(hsv, lower_blue,upper_blue)
@@ -118,7 +118,7 @@ class image_converter:
 
             #cv2.imwrite(str,imCrop)
 
-            #cv2.imshow('result',imCrop)
+            cv2.imshow('result',imCrop)
  
         #cv2.imshow('contour image',cv_image)
         #cv2.imshow('roi',imCrop2)

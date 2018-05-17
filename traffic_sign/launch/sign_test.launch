@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<launch>
+  <node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen" >
+    <param name="video_device" value="/dev/video0" />
+    <param name="camera_frame_id" value="usb_cam" />
+    <param name="io_method" value="mmap"/>
+    <param name="framerate" value="10"/>
+  </node>
+  
+  <node name="sign" pkg="traffic_sign" type="sign.py" output="screen" />
+
+  <node name="class" pkg="traffic_sign" type="class.py" output="screen" />
+  
+</launch>
