@@ -137,7 +137,7 @@ void NarrowPath::run(){
 				}
 				else{
 					ROS_INFO("right obstacles far.");
-					steer = 0;
+					steer = -2;
 				}
 				speed = CONST_SPEED;
 				msg.drive.steering_angle = steer;
@@ -179,7 +179,7 @@ void NarrowPath::run(){
 			if(end_count > 100){
 				end_flag = true;
 				ROS_INFO("end_flag: %d", end_flag);
-				steer = 0;
+				steer = -2;
 				speed = 0;
 				msg.drive.steering_angle = steer;
 				msg.drive.speed = speed;
