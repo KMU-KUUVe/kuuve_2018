@@ -30,7 +30,7 @@
 
 		<!-- scale platform -->
 		<param name="steer_max_angle" value="26" />
-		<param name="throttle" value="6" />
+		<param name="throttle" value="3" />
 		<param name="final_throttle" value="10" />
 		<remap from="/lane_detector/ackermann" to="ackermann" />
 

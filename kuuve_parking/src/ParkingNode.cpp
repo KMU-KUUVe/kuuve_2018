@@ -31,6 +31,12 @@ void ParkingNode::actionCallback(const kuuve_parking::MissionPlannerGoalConstPtr
 {
 	cout << "kuuve_parking actionCallback called!" << endl;
 
+	steer_value = 0;
+	makeControlMsg(steer_value,0);
+	control_pub.publish(control_msg);
+
+	ros::Duration(1).sleep();
+
 	mission_start_ = true;
 
 	ros::Rate r(10);

@@ -9,7 +9,7 @@
 	  <param name="OBSTACLE_RADIUS" type="double" value="0.20"/>
 	  <param name="TURN_FACTOR" type="double" value="4"/>
 	  <param name="TURN_WEIGHT1" type="int" value="6"/>
-	  <param name="TURN_WEIGHT2" type="int" value="4"/>
+	  <param name="TURN_WEIGHT2" type="int" value="3"/>
 	  <param name="RETURN_WEIGHT1" type="int" value="10"/>
 	  <param name="RETURN_WEIGHT2" type="int" value="15"/>
   </node>

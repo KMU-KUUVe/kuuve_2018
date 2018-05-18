@@ -18,6 +18,16 @@ namespace static_avoidance{
 
 	void StaticAvoidance::initSetup(){
 		
+		nh_.getParam("CONST_VEL", CONST_VEL);
+		nh_.getParam("DETECT_DISTANCE", DETECT_DISTANCE);
+		nh_.getParam("CONST_STEER", CONST_STEER);
+		nh_.getParam("OBSTACLE_RADIUS", OBSTACLE_RADIUS);
+		nh_.getParam("TURN_FACTOR", TURN_FACTOR);
+		nh_.getParam("TURN_WEIGHT1", TURN_WEIGHT1);
+		nh_.getParam("TURN_WEIGHT2", TURN_WEIGHT2);
+		nh_.getParam("RETURN_WEIGHT1", RETURN_WEIGHT1);
+		nh_.getParam("RETURN_WEIGHT2", RETURN_WEIGHT2);
+		
 		turn_left_flag = false;
 		turn_right_flag = false;
 		return_left_flag = false;
@@ -31,10 +41,6 @@ namespace static_avoidance{
 	}
 
 	void StaticAvoidance::obstacle_cb(const obstacle_detector::Obstacles& data) {
-		
-		nh_.getParam("CONST_VEL", CONST_VEL);
-		nh_.getParam("OBSTACLE_RADIUS", OBSTACLE_RADIUS);
-		nh_.getParam("DETECT_DISTANCE", DETECT_DISTANCE);
 		
 		flag = false;
 		speed = CONST_VEL;
@@ -60,20 +66,24 @@ namespace static_avoidance{
 		ROS_INFO("goal callback");
 		pub = nh_.advertise<ackermann_msgs::AckermannDriveStamped> ("/ackermann", 100);
 		sub = nh_.subscribe("/raw_obstacles", 100, &StaticAvoidance::obstacle_cb, this);
+	
+		msg.drive.steering_angle = -2;
+		msg.drive.speed = 0;
+		pub.publish(msg);
+		ROS_INFO("state change");
+		ros::Duration(1).sleep();
+
+		msg.drive.steering_angle = -2;
+		msg.drive.speed = 3;
+		pub.publish(msg);
+		ROS_INFO("go");
+		ros::Duration(1).sleep();
+		
 		this->run();
 	}	
 
 	void StaticAvoidance::run(){
 		ros::Rate r(100);
-		nh_.getParam("CONST_VEL", CONST_VEL);
-		nh_.getParam("DETECT_DISTANCE", DETECT_DISTANCE);
-		nh_.getParam("CONST_STEER", CONST_STEER);
-		nh_.getParam("OBSTACLE_RADIUS", OBSTACLE_RADIUS);
-		nh_.getParam("TURN_FACTOR", TURN_FACTOR);
-		nh_.getParam("TURN_WEIGHT1", TURN_WEIGHT1);
-		nh_.getParam("TURN_WEIGHT2", TURN_WEIGHT2);
-		nh_.getParam("RETURN_WEIGHT1", RETURN_WEIGHT1);
-		nh_.getParam("RETURN_WEIGHT2", RETURN_WEIGHT2);
 		
 		while(c.x >= DETECT_DISTANCE && ros::ok()){
 			ros::spinOnce();			

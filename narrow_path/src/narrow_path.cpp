@@ -89,6 +89,19 @@ void NarrowPath::goal_cb(const mission_planner::MissionPlannerGoalConstPtr &goal
 	ROS_INFO("Goal_callback");
 	pub = nh_.advertise<ackermann_msgs::AckermannDriveStamped> ("/ackermann", 100);
 	sub = nh_.subscribe("/raw_obstacles", 100, &NarrowPath::obstacle_cb, this);
+	
+	msg.drive.steering_angle = -2;
+	msg.drive.speed = 0;
+	pub.publish(msg);
+	ROS_INFO("state change");
+	ros::Duration(1).sleep();
+
+	msg.drive.steering_angle = -2;
+	msg.drive.speed = 3;
+	pub.publish(msg);
+	ROS_INFO("go");	
+	ros::Duration(1).sleep();
+	
 	this->run();
 }
 

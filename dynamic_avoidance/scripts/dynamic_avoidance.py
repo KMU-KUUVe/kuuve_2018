@@ -42,7 +42,13 @@ class DynamicAvoidance:
         rospy.init_node('dynamic_avoidance', anonymous=True)
         rate = rospy.Rate(100)
         acker_data = AckermannDriveStamped()
-        while not rospy.is_shutdown() and self.nearest_center_point.x > 3.0:
+
+		acker_data.drive.steering_angle = -2
+		acker_data.drive.speed = 0
+		self.pub.publish(acker_data)
+		rospy.sleep(1)
+		
+		while not rospy.is_shutdown() and self.nearest_center_point.x > 3.0:
             rospy.loginfo("approaching")
             acker_data.drive.steering_angle = -2
             acker_data.drive.speed = 3
