@@ -70,7 +70,10 @@ class MissionManager(smach.State):
                     self.goal.mission = 2;
 			    else:
                     self.goal.mission = 1;
+
+            #send a goal that stop, go, nitro to lane_detector.
             self.client.send_goal(self.goal)
+
             if key_str:
                 return key_str
             r.sleep()
@@ -97,8 +100,6 @@ class Missions(smach.State):
 def main():
     rospy.init_node('smach_example_state_machine')
 
-    #Create a SMACH state machine
-#sm = smach.StateMachine(outcomes=['outcome4', 'outcome5'])
     sm = smach.StateMachine(outcomes=[])
 
     #Open the container
