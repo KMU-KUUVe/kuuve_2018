@@ -28,6 +28,7 @@ class MissionManager(smach.State):
         self.int_sub = rospy.Subscriber('sign', Int32, self.sign_cb, queue_size=10)
         self.goal = MissionPlannerGoal()
         self.client = actionlib.SimpleActionClient('lane_detector', MissionPlannerAction)
+		self.nitro = False 
 
     def keyboard_cb(self, data):
         self.key_value = chr(data.code)
@@ -62,9 +63,13 @@ class MissionManager(smach.State):
             elif self.key_value == s_path_code:
                 key_str = 's_path'
             elif self.key_value == kuuve_parking_code:
+			    nitro = True
                 key_str = 'kuuve_parking'
             else:
-                self.goal.mission = 1;
+			    if nitro:
+                    self.goal.mission = 2;
+			    else:
+                    self.goal.mission = 1;
             self.client.send_goal(self.goal)
             if key_str:
                 return key_str
