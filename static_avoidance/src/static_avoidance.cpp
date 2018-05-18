@@ -47,10 +47,10 @@ namespace static_avoidance{
 			//	ROS_INFO("radius : %f", data.circles[i].radius);
 				//c.y is lateral axis. so if c.y > 0 means the obstacles are on the left.
 				if(c.y < 0){
-					sequence = 1;
+					sequence = 2;
 				}
 				else{
-					sequence = 2;
+					sequence = 1;
 				}
 			}	
 		}
@@ -97,8 +97,8 @@ namespace static_avoidance{
 		if(flag == 1){
 			//speed = CONST_VEL;
 			//avoidance right Obstacles
-			if(sequence == 1){
-				if(c.x > 0.6){
+			if(sequence == 2){
+				if(c.x > 0.7){
 					turn_left_flag = true;
 					return_right_flag = false;
 					turn_right_flag = false;
@@ -113,8 +113,8 @@ namespace static_avoidance{
 					end_flag = false;
 				}
 			}
-			else if(sequence == 2){
-				if(c.x > 0.7){
+			else if(sequence == 1){
+				if(c.x > 0.6){
 					turn_right_flag = true;
 					return_left_flag = false;
 					turn_left_flag = false;
@@ -134,6 +134,7 @@ namespace static_avoidance{
 		else if(flag == 0){
 			end_count ++;
 			ROS_INFO("count : %d", end_count);
+			//modi
 			if( sequence == 2){
 				if(end_count >= 30){
 					end_flag = true;
@@ -141,7 +142,7 @@ namespace static_avoidance{
 					turn_right_flag = false;
 					return_left_flag = false;
 					return_right_flag = false;
-					steer = -20;
+					steer = 20;
 					speed = 7;
 					msg.drive.steering_angle = steer;
 					msg.drive.speed = speed;
@@ -159,7 +160,7 @@ namespace static_avoidance{
 			}
 			else{
 				if(end_count >= 200){
-					steer = -2;
+					steer = -4;
 					turn_left_flag = false;
 					turn_right_flag = false;
 					return_left_flag = false;

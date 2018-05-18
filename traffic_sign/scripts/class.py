@@ -22,7 +22,7 @@ cnt6 = 0
 cnt7 = 0
 cnt9 = 0
 
-cntt = 3
+cntt = 2
 
 pub = rospy.Publisher('sign', Int32, queue_size=10)
 

@@ -5,8 +5,8 @@
 		<param name="resize_height" value="270" />
 		<param name="steer_max_angle" value="26" /> 
 
-		<param name="gray_bin_thres" value="170" />
-		<param name="hsv_s_bin_thres" value="110" />
+		<param name="gray_bin_thres" value="180" />
+		<param name="hsv_s_bin_thres" value="100" />
 
 		<!-- pixel value -->
 		<!-- y_offset = front point y offset (P2) -->
@@ -53,7 +53,7 @@
 		<param name="obstacle_detect_time" value="10" />
 
 
-		<param name="steady_state" value="50" />
+		<param name="steady_state" value="100" />
 
 		<param name="yaw_error_for_stop_point" value="7" />
 

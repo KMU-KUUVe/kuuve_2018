@@ -49,10 +49,16 @@ void LaneDetectorNode::actionCallback(const lane_detector::MissionPlannerGoalCon
 {
 	cout << "lane_detector actionCallback called!" << endl;
 	
-	if(goal->mission == 0)		// stop lane detecting
+	if(goal->mission == 0)	{	// stop lane detecting
 		mission_start_ = false;
+		destroyAllWindows();
+	}
 	else if(goal->mission == 1)	// start lane detecting
 		mission_start_ = true;
+	else if(goal->mission == 2) {
+		mission_start_ = true;
+		final_drive_ = true;
+	}
 	else
 		throw runtime_error("goal param value have to be either 0 or 1");
 
@@ -79,7 +85,9 @@ void LaneDetectorNode::imageCallback(const sensor_msgs::ImageConstPtr& image)
 			cerr << e.what() << endl;
 		}
 
+#if DEBUG
 	    getRosParamForUpdate();
+#endif
 
 	    int steer_control_value = lanedetector_ptr_->laneDetecting(raw_img);
 
@@ -192,6 +200,7 @@ void LaneDetectorNode::getRosParamForUpdate()
 	nh_.getParam("left_steer_factor", paramArr[9]);
 	nh_.getParam("veh_center_point_x_offset", paramArr[10]);
 	nh_.getParam("throttle", throttle_);
+	nh_.getParam("final_throttle", final_throttle_);
 
 	lanedetector_ptr_->setGrayBinThres(paramArr[0]);
 	lanedetector_ptr_->setHsvSBinThres(paramArr[1]);
@@ -248,7 +257,10 @@ ackermann_msgs::AckermannDriveStamped LaneDetectorNode::makeControlMsg()
 	ackermann_msgs::AckermannDriveStamped control_msg;
 	//control_msg.drive.steering_angle = steer_control_value;
 	control_msg.drive.steering_angle = lanedetector_ptr_->getRealSteerAngle();
-	control_msg.drive.speed = throttle_;
+	if(final_drive_)
+		control_msg.drive.speed = final_throttle_;
+	else
+		control_msg.drive.speed = throttle_;
 	return control_msg;
 }
 

@@ -7,9 +7,9 @@
   </node>
 -->
   <node pkg="narrow_path" name="narrow_path_node" type="narrow_path_node" output="screen">
-    <param name="CONST_SPEED" type="int"  value="7"/>
+    <param name="CONST_SPEED" type="int"  value="5"/>
     <param name="CONST_STEER" type="int"  value="-2"/>
-    <param name="FILTER_RAVA_RADIUS" type="double"  value="0.17"/>
+    <param name="FILTER_RAVA_RADIUS" type="double"  value="0.1"/>
     <param name="STEER_WEIGHT" type="int"  value="40"/>
     <param name="ONE_SIDE_WEIGHT" type="double"  value="-30.0"/>
     <param name="DETECT_DISTANCE" type="int"  value="4"/>

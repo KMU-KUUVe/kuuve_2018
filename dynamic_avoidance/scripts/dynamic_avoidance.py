@@ -45,7 +45,7 @@ class DynamicAvoidance:
         while not rospy.is_shutdown() and self.nearest_center_point.x > 3.0:
             rospy.loginfo("approaching")
             acker_data.drive.steering_angle = -2
-            acker_data.drive.speed = 7
+            acker_data.drive.speed = 3
             self.pub.publish(acker_data)
 
         rospy.loginfo("too close")
@@ -68,7 +68,7 @@ class DynamicAvoidance:
 
         print("obstacle dissapear")
         acker_data.drive.steering_angle = -2
-        acker_data.drive.speed = 7
+        acker_data.drive.speed = 5
         self.pub.publish(acker_data)
         rospy.sleep(4)
 

@@ -12,7 +12,7 @@ from cv_bridge import CvBridge, CvBridgeError
 
 
 
-count = 0
+#count = 0
 
 
 img=np.zeros((300,512,3), np.uint8)
@@ -25,7 +25,7 @@ class image_converter:
 
   def __init__(self):
     self.image_pub = rospy.Publisher("test",Image,queue_size = 20)
-
+    self.count = 0
     self.bridge = CvBridge()
     self.image_sub = rospy.Subscriber("/usb_cam/image_raw",Image,self.callback)
 
@@ -47,12 +47,13 @@ class image_converter:
 
 
     hsv=cv2.cvtColor(imCrop2, cv2.COLOR_BGR2HSV)
-    lower_blue=np.array([105,50,30])	
+    lower_blue=np.array([95,50,20])	
     upper_blue=np.array([130,255,255])
-    lower_red =np.array([0,70,50])
-    upper_red =np.array([10,255,255])
-    lower_red2 =np.array([170,70,50])
-    upper_red2 =np.array([180,255,255])
+    lower_red =np.array([0,60,20])
+    upper_red =np.array([25,255,255])
+    lower_red2 =np.array([160,60,20])
+#upper_red2 =np.array([195,255,255])
+    upper_red2 =np.array([255,255,255])
     mask_b=cv2.inRange(hsv, lower_blue,upper_blue)
     mask_r1=cv2.inRange(hsv, lower_red,upper_red)
     mask_r2=cv2.inRange(hsv, lower_red2,upper_red2)
@@ -96,11 +97,12 @@ class image_converter:
         approx = cv2.approxPolyDP(cnt,epsilon,True)
         x,y,w,h = cv2.boundingRect(approx)
 
-        print('w: %d,h: %d' %(w,h))
+        
 
-
-        if w>32 and h>32 and w/h <= 1.8 :
-
+	div_ = w/(h*1.0)
+        if w>80 and h>80 and w < 200 and h <200 and div_ > 0.75 and div_ < 1.35 :
+	    self.count +=1
+	    print('w: %d,h: %d' %(w,h))
 
             cv2.rectangle(imCrop2,(x,y),(x+w,y+h),(0,255,0),2)
 
@@ -116,7 +118,7 @@ class image_converter:
             except CvBridgeError as e:
                 print(e)
 
-            #cv2.imwrite(str,imCrop)
+            cv2.imwrite('/home/avees-server/image/'+str(self.count)+'.jpg',imCrop)
 
             cv2.imshow('result',imCrop)
  

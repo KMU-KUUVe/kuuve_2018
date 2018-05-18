@@ -61,6 +61,9 @@ private:
 	actionlib::SimpleActionServer<lane_detector::MissionPlannerAction> as_;
 
 	int throttle_ = 0;
+	int final_throttle_ = 16;
+
+	bool final_drive_ = false;
 
 	bool mission_start_ = false;	// for action
 

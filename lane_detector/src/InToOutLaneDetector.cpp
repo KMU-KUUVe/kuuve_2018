@@ -34,7 +34,7 @@ void InToOutLaneDetector::cvtToRoiBinaryImg(const cv::Point& left_top, const cv:
     split(roi_hsv_img, hsv_planes);
     roi_hsv_s_img = hsv_planes[1];  // s image
 
-	medianBlur(roi_gray_img, roi_gray_img, 1);
+	medianBlur(roi_gray_img, roi_gray_img, 3);
 	medianBlur(roi_hsv_s_img, roi_hsv_s_img, 5);
 
     // 3. convert 's' image and gray to binary

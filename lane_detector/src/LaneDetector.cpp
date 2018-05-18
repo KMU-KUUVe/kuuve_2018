@@ -145,8 +145,8 @@ int LaneDetector::calculateSteerValue(const int center_steer_control_value, cons
 	double tmp_steer_value = center_steer_control_value + (steer_offset / STEER_MAX_ANGLE_) * steer_angle_;
 
 	steer_control_value = (int) (tmp_steer_value >= 0 ? tmp_steer_value + 0.5 : tmp_steer_value - 0.5 - left_steer_factor_);
-	cout << "origin steer value: " << (int) (tmp_steer_value > 0 ? tmp_steer_value + 0.5 : tmp_steer_value - 0.5) << endl;
-	cout << "left factor added steer value: " << steer_control_value << endl;
+	// cout << "origin steer value: " << (int) (tmp_steer_value > 0 ? tmp_steer_value + 0.5 : tmp_steer_value - 0.5) << endl;
+	// cout << "left factor added steer value: " << steer_control_value << endl;
 
 	if(steer_control_value > STEER_MAX_ANGLE_) {
 		steer_control_value = center_steer_control_value + steer_offset;

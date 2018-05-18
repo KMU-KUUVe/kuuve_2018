@@ -53,6 +53,7 @@ class MissionManager(smach.State):
             elif self.key_value == u_turn_code:
                 key_str = 'u_turn'
             elif self.key_value == static_avoidance_code:
+                rospy.sleep(1.0)
                 key_str = 'static_avoidance'
             elif self.key_value == dynamic_avoidance_code:
                 key_str = 'dynamic_avoidance'
@@ -64,7 +65,6 @@ class MissionManager(smach.State):
                 key_str = 'kuuve_parking'
             else:
                 self.goal.mission = 1;
-            rospy.loginfo("///////////%d/////////////", self.goal.mission)
             self.client.send_goal(self.goal)
             if key_str:
                 return key_str
