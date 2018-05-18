@@ -128,7 +128,9 @@ void LaneDetector::visualizeLine(const int index) const
 
 void LaneDetector::showImg() const
 {
+#if DEBUG
 	imshow("binary img", roi_binary_img_);
+#endif
 	imshow("frame", resized_img_);
 	waitKey(3);
 }

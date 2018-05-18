@@ -11,18 +11,18 @@ from mission_planner.msg import MissionPlannerAction, MissionPlannerGoal, Missio
 
 mission_init_code = '\0'
 
-crosswalk_code = '1'
+crosswalk_stop_code = '1'
 u_turn_code = '2'
 static_avoidance_code = '3'
 dynamic_avoidance_code = '4'
 narrow_path_code = '5'
 s_path_code = '6'
-parking_code = '7'
+kuuve_parking_code = '7'
 
 #define state MissionManager
 class MissionManager(smach.State):
     def __init__(self):
-        smach.State.__init__(self, outcomes=['crosswalk', 'u_turn', 'static_avoidance', 'dynamic_avoidance', 'narrow_path', 's_path', 'parking'])
+        smach.State.__init__(self, outcomes=['crosswalk_stop', 'u_turn', 'static_avoidance', 'dynamic_avoidance', 'narrow_path', 's_path', 'kuuve_parking'])
         self.key_value = mission_init_code 
         self.key_sub = rospy.Subscriber('keyboard/keydown', Key, self.keyboard_cb, queue_size=1)
         self.int_sub = rospy.Subscriber('sign', Int32, self.sign_cb, queue_size=10)
@@ -43,27 +43,31 @@ class MissionManager(smach.State):
         self.key_value = mission_init_code 
         rospy.loginfo("key value = %s", self.key_value)
         r = rospy.Rate(1000)
-        self.client.wait_for_server()
+#self.client.wait_for_server()
         while not rospy.is_shutdown():
-            self.goal.mission = 1
-            self.client.send_goal(self.goal)
-            if not self.key_value == mission_init_code:
-                self.goal.mission = 0;
-                self.client.send_goal(self.goal)
-            if self.key_value == crosswalk_code:
-                return 'crosswalk'
+            self.goal.mission = 0
+            key_str = ""
+#rospy.loginfo('lane_detector goal = %d', self.goal.mission)
+            if self.key_value == crosswalk_stop_code:
+                key_str = 'crosswalk_stop'
             elif self.key_value == u_turn_code:
-                return 'u_turn'
+                key_str = 'u_turn'
             elif self.key_value == static_avoidance_code:
-                return 'static_avoidance'
+                key_str = 'static_avoidance'
             elif self.key_value == dynamic_avoidance_code:
-                return 'dynamic_avoidance'
+                key_str = 'dynamic_avoidance'
             elif self.key_value == narrow_path_code:
-                return 'narrow_path'
+                key_str = 'narrow_path'
             elif self.key_value == s_path_code:
-                return 's_path'
-            elif self.key_value == parking_code:
-                return 'parking'
+                key_str = 's_path'
+            elif self.key_value == kuuve_parking_code:
+                key_str = 'kuuve_parking'
+            else:
+                self.goal.mission = 1;
+            rospy.loginfo("///////////%d/////////////", self.goal.mission)
+            self.client.send_goal(self.goal)
+            if key_str:
+                return key_str
             r.sleep()
 
 #define state Mission
@@ -94,14 +98,14 @@ def main():
 
     #Open the container
     with sm:
-        smach.StateMachine.add('MissionManager', MissionManager(), transitions={'crosswalk':'crosswalk', 'static_avoidance':'static_avoidance', 'narrow_path':'narrow_path', 's_path':'s_path', 'dynamic_avoidance':'dynamic_avoidance', 'u_turn':'u_turn','parking':'parking'})
-        smach.StateMachine.add('crosswalk', Missions('crosswalk'), transitions={'finish':'MissionManager'})
+        smach.StateMachine.add('MissionManager', MissionManager(), transitions={'crosswalk_stop':'crosswalk_stop', 'static_avoidance':'static_avoidance', 'narrow_path':'narrow_path', 's_path':'s_path', 'dynamic_avoidance':'dynamic_avoidance', 'u_turn':'u_turn','kuuve_parking':'kuuve_parking'})
+        smach.StateMachine.add('crosswalk_stop', Missions('crosswalk_stop'), transitions={'finish':'MissionManager'})
         smach.StateMachine.add('u_turn', Missions('u_turn'), transitions={'finish':'MissionManager'})
         smach.StateMachine.add('dynamic_avoidance', Missions('dynamic_avoidance'), transitions={'finish':'MissionManager'})
         smach.StateMachine.add('static_avoidance', Missions('static_avoidance'), transitions={'finish':'MissionManager'})
         smach.StateMachine.add('narrow_path', Missions('narrow_path'), transitions={'finish':'MissionManager'})
         smach.StateMachine.add('s_path', Missions('s_path'), transitions={'finish':'MissionManager'})
-        smach.StateMachine.add('parking', Missions('parking'), transitions={'finish':'MissionManager'})
+        smach.StateMachine.add('kuuve_parking', Missions('kuuve_parking'), transitions={'finish':'MissionManager'})
 
     sis = smach_ros.IntrospectionServer('server_name', sm, '/SM_ROOT')
     sis.start()

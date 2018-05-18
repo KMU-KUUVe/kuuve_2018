@@ -1,5 +1,6 @@
 <launch>
 	<node pkg="kuuve_parking" type="kuuve_parking" name="kuuve_parking">
+		<remap from="raw_obstacles" to="parking_raw_obstacles" />
 		<param name="resize_width" value="480" />
 		<param name="resize_height" value="270" />
 		<param name="steer_max_angle" value="26" /> 
@@ -25,7 +26,7 @@
 		<!--param name="reverse_stop_y_offset" value="900" /-->
 
 		<!-- factor 0 ~ 100 -->
-		<param name="yaw_factor" value="160" />
+		<param name="yaw_factor" value="180" />
 		<param name="lateral_factor" value="0" />
 		<param name="first_driving_yaw_factor" value="300" />
 

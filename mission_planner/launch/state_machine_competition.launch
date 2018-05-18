@@ -4,7 +4,15 @@
   <node pkg="keyboard" name="keyboard" type="keyboard"/>
   <node pkg="smach_viewer" name="smach_viewer" type="smach_viewer.py" output="screen"/>
   <include file="$(find dynamic_avoidance)/launch/dynamic_avoidance.launch"/>
+  <include file="$(find u_turn)/launch/u_turn.launch"/>
+  <include file="$(find narrow_path)/launch/narrow_path.launch"/>
+  <include file="$(find narrow_path)/launch/s_path.launch"/>
+  <include file="$(find static_avoidance)/launch/static_avoidance.launch"/>
   <include file="$(find traffic_sign)/launch/sign_test.launch"/>
   <include file="$(find lane_detector)/launch/include/usb_cam.launch"/>
   <include file="$(find lane_detector)/launch/include/lane_detector.launch"/>
+  <include file="$(find kuuve_parking)/launch/include/usb_cam.launch"/>
+  <include file="$(find kuuve_parking)/launch/include/obstacle_extractor.launch"/>
+  <include file="$(find kuuve_parking)/launch/include/kuuve_parking.launch"/>
+  <include file="$(find crosswalk_stop)/launch/include/crosswalk_stop.launch"/>
 </launch>

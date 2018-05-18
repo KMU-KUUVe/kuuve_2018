@@ -98,7 +98,7 @@ def run_inference_on_image():
 			    
     print("--------------------")
 
-    #print(cnt1,cnt2,cnt3,cnt4,cnt5,cnt6,cnt7,cnt9)
+    print(cnt1,cnt2,cnt3,cnt4,cnt5,cnt6,cnt7,cnt9)
     if(cnt1>cntt) :
         #parking
         mode = 1
@@ -198,8 +198,8 @@ def run_inference_on_image():
 
     elif(cnt9>cntt) :
         mode = 9
-        rospy.loginfo("dynamic_avoidance")
-        pub.publish(dynamic_avoidance_code)
+        rospy.loginfo("crosswalk")
+        pub.publish(crosswalk_code)
         cnt1 = 0
         cnt2 = 0
         cnt3 = 0

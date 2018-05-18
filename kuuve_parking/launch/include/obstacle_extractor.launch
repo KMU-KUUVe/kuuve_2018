@@ -1,6 +1,7 @@
 <launch>
-<node name="obstacle_extractor" pkg="obstacle_detector" type="obstacle_extractor_node">
+<node name="parking_obstacle_extractor" pkg="obstacle_detector" type="obstacle_extractor_node">
 	<!--remap from="scan" to="scan_filtered"/-->
+	<remap from="raw_obstacles" to="parking_raw_obstacles"/>
 	<param name="active"               value="true"/>
 	<param name="use_scan"             value="true"/>
 	<param name="use_pcl"              value="false"/>
