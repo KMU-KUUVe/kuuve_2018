@@ -63,10 +63,11 @@ class MissionManager(smach.State):
             elif self.key_value == s_path_code:
                 key_str = 's_path'
             elif self.key_value == kuuve_parking_code:
-                nitro = True
+                self.nitro = True
+                rospy.loginfo('!!Nitro activated!!')
                 key_str = 'kuuve_parking'
             else:
-                if nitro:
+                if self.nitro:
                     self.goal.mission = 2;
                 else:
                     self.goal.mission = 1;
