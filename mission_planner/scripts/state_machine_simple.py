@@ -61,7 +61,7 @@ class MissionManager(smach.State):
             elif self.key_value == narrow_path_code:
                 key_str = 'narrow_path'
             elif self.key_value == s_path_code:
-                key_str = 's_path'
+                key_str = 'narrow_path'
             elif self.key_value == kuuve_parking_code:
                 self.nitro = True
                 rospy.loginfo('!!Nitro activated!!')
@@ -75,7 +75,7 @@ class MissionManager(smach.State):
             #send a goal that stop, go, nitro to lane_detector.
             self.client.send_goal(self.goal)
 
-            if key_str:
+            if not key_str == "":
                 return key_str
             r.sleep()
 

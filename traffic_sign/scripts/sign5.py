@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__ import print_function
 import roslib
+#roslib.load_manifest('sign')
 import sys
 import rospy
 import cv2
@@ -10,7 +11,8 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 
 
-count = 0
+
+#count = 0
 
 
 img=np.zeros((300,512,3), np.uint8)
@@ -22,64 +24,36 @@ def nothing(x):
 class image_converter:
 
   def __init__(self):
-    self.image_pub = rospy.Publisher("image_send",Image,queue_size = 20)
-
+    self.image_pub = rospy.Publisher("test",Image,queue_size = 20)
+    self.count = 0
     self.bridge = CvBridge()
     self.image_sub = rospy.Subscriber("/usb_cam/image_raw",Image,self.callback)
 
   def callback(self,data):
     try:
       cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+      print("got it")
     except CvBridgeError as e:
       print(e)
 
 
-   # if cols > 60 and rows > 60 :
-   #   cv2.circle(cv_image, (50,50), 10, 255)
-
-    #cv2.namedWindow('image') 
-
-    #cv2. createTrackbar('R1','image',0,255,nothing)
-    #cv2. createTrackbar('G1','image',0,255,nothing)
-    #cv2. createTrackbar('B1','image',0,255,nothing)
-
-    #cv2. createTrackbar('R2','image',0,255,nothing)
-    #cv2. createTrackbar('G2','image',0,255,nothing)
-    #cv2. createTrackbar('B2','image',0,255,nothing)
-
-    #switch = '0 : OFF \n1 : ON'
-    #cv2.createTrackbar(switch, 'image',0,1,nothing)
-
-    #cv2.imshow('image',img)
-
-    #imgray=cv2.cvtColor(cv_image,cv2.COLOR_BGR2GRAY)
-    #ret2,thresh = cv2.threshold(imgray,127,255,0)
-    
-    #r1=cv2.getTrackbarPos('R1','image')
-    #g1=cv2.getTrackbarPos('G1','image')
-    #b1=cv2.getTrackbarPos('B1','image')
-    #s1=cv2.getTrackbarPos(switch,'image')
-
-    #r2=cv2.getTrackbarPos('R2','image')
-    #g2=cv2.getTrackbarPos('G2','image')
-    #b2=cv2.getTrackbarPos('B2','image')
-    #s2=cv2.getTrackbarPos(switch,'image')
 
 
     (rows,cols,channels) = cv_image.shape
 
     #imCrop2 = cv_image[365:(365+160),430:(430+870)]
 
-    imCrop2 = cv_image[cols/8:(cols/8+cols/3),rows/3:(rows/3+rows)]
+    imCrop2 = cv_image[cols/4:(cols/4+cols/4),rows/3:(rows/3+rows)]
 
 
     hsv=cv2.cvtColor(imCrop2, cv2.COLOR_BGR2HSV)
-    lower_blue=np.array([105,50,50])	
+    lower_blue=np.array([95,50,20])	
     upper_blue=np.array([130,255,255])
-    lower_red =np.array([0,70,50])
-    upper_red =np.array([10,255,255])
-    lower_red2 =np.array([170,70,50])
-    upper_red2 =np.array([180,255,255])
+    lower_red =np.array([0,60,20])
+    upper_red =np.array([25,255,255])
+    lower_red2 =np.array([160,60,20])
+#upper_red2 =np.array([195,255,255])
+    upper_red2 =np.array([255,255,255])
     mask_b=cv2.inRange(hsv, lower_blue,upper_blue)
     mask_r1=cv2.inRange(hsv, lower_red,upper_red)
     mask_r2=cv2.inRange(hsv, lower_red2,upper_red2)
@@ -123,11 +97,12 @@ class image_converter:
         approx = cv2.approxPolyDP(cnt,epsilon,True)
         x,y,w,h = cv2.boundingRect(approx)
 
-        print('w: %d,h: %d' %(w,h))
+        
 
-
-        if w>25 and h>25 and w/h < 2 :
-
+	div_ = w/(h*1.0)
+        if w>80 and h>80 and w < 200 and h <200 and div_ > 0.75 and div_ < 1.35 :
+	    self.count +=1
+	    print('w: %d,h: %d' %(w,h))
 
             cv2.rectangle(imCrop2,(x,y),(x+w,y+h),(0,255,0),2)
 
@@ -143,12 +118,12 @@ class image_converter:
             except CvBridgeError as e:
                 print(e)
 
-            #cv2.imwrite(str,imCrop)
+            cv2.imwrite('/home/avees-server/image/'+str(self.count)+'.jpg',imCrop)
 
             cv2.imshow('result',imCrop)
  
-        cv2.imshow('contour image',cv_image)
-        cv2.imshow('roi',imCrop2)
+        #cv2.imshow('contour image',cv_image)
+        #cv2.imshow('roi',imCrop2)
 
 
 

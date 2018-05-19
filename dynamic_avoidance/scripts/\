@@ -59,13 +59,13 @@ class Uturn:
         acker_data.drive.steering_angle = -26
         acker_data.drive.speed = 4
         self.pub.publish(acker_data)
-        rospy.sleep(23.2)
+        rospy.sleep(23)
 
         print("right turn")
         acker_data.drive.steering_angle = 14
         acker_data.drive.speed = 4
         self.pub.publish(acker_data)
-        rospy.sleep(1.5)
+        rospy.sleep(2)
 
         print("finish")
         acker_data.drive.steering_angle = -2

@@ -5,12 +5,12 @@
 		<param name="resize_height" value="270" />
 		<param name="steer_max_angle" value="26" /> 
 
-		<param name="gray_bin_thres" value="180" />
-		<param name="hsv_s_bin_thres" value="100" />
+		<param name="gray_bin_thres" value="200" />
+		<param name="hsv_s_bin_thres" value="110" />
 
 		<!-- pixel value -->
 		<!-- y_offset = front point y offset (P2) -->
-		<param name="detect_y_offset" value="150" />
+		<param name="detect_y_offset" value="140" />
 		<param name="line_length" value="20" />
 
 		<param name="reverse_detect_offset" value="250" />
@@ -49,11 +49,11 @@
 		<!-- obstract -->
 		<param name="obstacle_x_thres" type="double" value="6.0" />
 		<param name="obstacle_y_thres" type="double" value="3.0" />
-		<param name="this_room_dist_thres" type="double" value="3.5" />
+		<param name="this_room_dist_thres" type="double" value="2.5" />
 		<param name="obstacle_detect_time" value="10" />
 
 
-		<param name="steady_state" value="100" />
+		<param name="steady_state" value="40" />
 
 		<param name="yaw_error_for_stop_point" value="7" />
 
